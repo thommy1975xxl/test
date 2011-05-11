@@ -8,7 +8,7 @@ import javax.faces.context.FacesContext;
 public class LoginController {
 
 	public void display() {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!å‚‚");
+		System.out.println("!!!!ONLY FOR TESTING!!!!!!!!!!");
 		FacesContext.getCurrentInstance().addMessage("123",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "234", "567"));
 		System.out.println(FacesContext.getCurrentInstance().getMessageList()
