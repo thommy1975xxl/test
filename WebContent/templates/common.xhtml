@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+	<title></title>
+	<style type="text/css">
+#loginDialog {
+	font-size: 12px;
+}
+
+#mainMenu {
+	font-size: 12px;
+}
+</style>
+</h:head>
+<h:body>
+<h:messages />
+		<h:form>
+	<p:dialog id="loginDialog" header="Please Login" modal="true"
+		rendered="true" visible="true" minWidth="300" styleClass="loginDialog">
+		<p:messages />
+			<h:panelGrid columns="2">
+
+				<p:commandButton action="#{loginController.display()}" value="Login" ajax="false"/>
+			</h:panelGrid>
+	
+	</p:dialog>
+	</h:form>
+	<ui:insert name="body">include the body here</ui:insert>
+</h:body>
+</html>
