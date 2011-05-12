@@ -23,10 +23,10 @@
 			<p:messages />
 			<h:panelGrid columns="2">
 				<h:outputText value="Username:" />
-				<p:inputText id="userNameInput" value="#{loginController.userName}" />
+				<p:inputText id="userNameInput" value="#{loginController.userName}" size="28"/>
 				<h:outputText value="Password:" />
 				<p:password id="passwordInput" feedback="false"
-					value="#{loginController.password}" />
+					value="#{loginController.password}" size="28" />
 				<h:outputText value="" />
 				<p:commandButton action="#{loginController.login()}" value="Login"
 					ajax="false" />

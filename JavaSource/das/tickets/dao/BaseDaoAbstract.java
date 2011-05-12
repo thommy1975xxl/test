@@ -13,4 +13,6 @@ public interface BaseDaoAbstract {
 
 	public void persist(Object obj);
 
+	public EntityManager getEntityManager();
+
 }

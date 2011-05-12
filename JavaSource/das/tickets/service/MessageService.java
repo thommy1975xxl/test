@@ -19,9 +19,6 @@ public class MessageService {
 				shortDescription,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, shortDescription,
 						longDescription));
-		System.out.println(">>>>>>>>>>>>>>>>MESSAGE________________"
-				+ FacesContext.getCurrentInstance().getMessageList().get(0)
-						.getDetail());
 	}
 
 }

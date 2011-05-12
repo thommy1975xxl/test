@@ -21,7 +21,7 @@ public class LoginController {
 	private LoginDao loginDao;
 
 	public void login() {
-		User user = loginDao.findUserByName(userName, password);
+		User user = loginDao.findUserByUserNameAndPassword(userName, password);
 		if (user == null) {
 			FacesContext.getCurrentInstance().addMessage(
 					MessageService.WRONG_LOGIN,
