@@ -3,6 +3,12 @@ package das.tickets.controller;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+
+import das.tickets.dao.LoginDao;
+import das.tickets.domain.User;
+import das.tickets.service.MessageService;
+import das.tickets.service.SessionService;
 
 @ManagedBean(name = "loginController")
 public class LoginController {
@@ -11,11 +17,21 @@ public class LoginController {
 
 	private String password;
 
-	public void display() {
-		FacesContext.getCurrentInstance().addMessage("123",
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "234", "567"));
-		System.out.println(FacesContext.getCurrentInstance().getMessageList()
-				.get(0).getDetail());
+	@Inject
+	private LoginDao loginDao;
+
+	public void login() {
+		User user = loginDao.findUserByName(userName, password);
+		if (user == null) {
+			FacesContext.getCurrentInstance().addMessage(
+					MessageService.WRONG_LOGIN,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							MessageService.WRONG_LOGIN,
+							MessageService.WRONG_LOGIN));
+		} else {
+			SessionService.setSessionAttribute("user", user);
+		}
+
 	}
 
 	// getter & setter

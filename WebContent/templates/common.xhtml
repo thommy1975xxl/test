@@ -18,7 +18,7 @@
 	<h:messages />
 	<h:form>
 		<p:dialog id="loginDialog" header="Please Login" modal="true"
-			rendered="true" visible="true" minWidth="300"
+			rendered="#{sessionScope.user.userName == null}" visible="true" minWidth="300"
 			styleClass="loginDialog">
 			<p:messages />
 			<h:panelGrid columns="2">
@@ -28,7 +28,7 @@
 				<p:password id="passwordInput" feedback="false"
 					value="#{loginController.password}" />
 				<h:outputText value="" />
-				<p:commandButton action="#{loginController.display()}" value="Login"
+				<p:commandButton action="#{loginController.login()}" value="Login"
 					ajax="false" />
 			</h:panelGrid>
 
