@@ -12,7 +12,6 @@ public class LoginController {
 	private String password;
 
 	public void display() {
-		System.out.println("!!!!ONLY FOR TESTING!!!!!!!!!!");
 		FacesContext.getCurrentInstance().addMessage("123",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "234", "567"));
 		System.out.println(FacesContext.getCurrentInstance().getMessageList()
