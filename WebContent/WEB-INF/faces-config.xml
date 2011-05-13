@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<faces-config
-    xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-	version="2.0">
-
-	<navigation-rule>
-		<from-view-id>/pages/inputname.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>greeting</from-outcome>
-			<to-view-id>/pages/greeting.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
-
-    <application>
-        <resource-bundle>
-            <base-name>resources</base-name>
-            <var>msgs</var>
-        </resource-bundle>
-    </application>
-    
-    <validator>
-    	<validator-id>EmptyFieldValidator</validator-id>
-    	<validator-class>das.tickets.validator.EmptyFieldValidator</validator-class>
-    </validator>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <navigation-rule>
+  <from-view-id>/pages/inputname.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>greeting</from-outcome>
+   <to-view-id>/pages/greeting.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <!-- custom validation -->
+ <validator>
+  <validator-id>EmptyFieldValidator</validator-id>
+  <validator-class>das.tickets.validator.EmptyFieldValidator</validator-class>
+ </validator>
+ <validator>
+  <validator-id>UserNameLengthValidator</validator-id>
+  <validator-class>das.tickets.validator.UserNameLengthValidator</validator-class>
+ </validator>
+ <validator>
+  <validator-id>UserPasswordLengthValidator</validator-id>
+  <validator-class>das.tickets.validator.UserPasswordLengthValidator</validator-class>
+ </validator>
+ <validator>
+  <validator-id>UserNameEmailLengthValidator</validator-id>
+  <validator-class>das.tickets.validator.UserNameEmailLengthValidator</validator-class>
+ </validator>
+ <validator>
+  <validator-id>UserFirstNameValidator</validator-id>
+  <validator-class>das.tickets.validator.UserFirstNameValidator</validator-class>
+ </validator>
+  <validator>
+  <validator-id>UserLastNameValidator</validator-id>
+  <validator-class>das.tickets.validator.UserLastNameValidator</validator-class>
+ </validator>
+ <application>
+  <resource-bundle>
+   <base-name>resources</base-name>
+   <var>msgs</var>
+  </resource-bundle>
+ </application>
 </faces-config>

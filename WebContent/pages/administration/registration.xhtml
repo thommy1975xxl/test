@@ -19,6 +19,8 @@
 								value="#{registrationController.userName}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserNameLengthValidator" />
 							</p:inputText>
 							<p:message for="userNameInput" />
 							<h:outputText value="*Password:" />
@@ -26,6 +28,8 @@
 								value="#{registrationController.password}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserPasswordLengthValidator" />
 							</p:password>
 							<p:message for="passwordInput" />
 							<h:outputText value="*Confirmation:" />
@@ -40,6 +44,8 @@
 								value="#{registrationController.email}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserNameEmailLengthValidator" />
 							</p:inputText>
 							<p:message for="userEmailInput" />
 							<h:outputText value="*First Name:" />
@@ -47,6 +53,8 @@
 								value="#{registrationController.firstName}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserFirstNameValidator" />
 							</p:inputText>
 							<p:message for="userFirstNameInput" />
 							<h:outputText value="*Last Name:" />
@@ -54,6 +62,8 @@
 								value="#{registrationController.lastName}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									<f:validator
+									validatorId="das.tickets.validator.UserLastNameValidator" />
 							</p:inputText>
 							<p:message for="userLastNameInput" />
 						</h:panelGrid>

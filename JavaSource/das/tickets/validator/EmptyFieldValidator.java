@@ -9,7 +9,7 @@ import javax.faces.validator.ValidatorException;
 
 import org.primefaces.model.DualListModel;
 
-import das.tickets.config.ValidationDefinition;
+import das.tickets.config.RegistrationValidationDefinition;
 
 @FacesValidator(value = "das.tickets.validator.EmptyFieldValidator")
 public class EmptyFieldValidator implements Validator {
@@ -23,7 +23,7 @@ public class EmptyFieldValidator implements Validator {
 			if (readValue.isEmpty()) {
 				FacesMessage facesMessage = new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
-						ValidationDefinition.EMPTY_VALUE, null);
+						RegistrationValidationDefinition.MESSAGE_EMPTY_VALUE, null);
 				throw new ValidatorException(facesMessage);
 			}
 		} else if (value instanceof org.primefaces.model.DualListModel) {
@@ -32,7 +32,7 @@ public class EmptyFieldValidator implements Validator {
 			if (dualModelList.getTarget().isEmpty()) {
 				FacesMessage facesMessage = new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
-						ValidationDefinition.EMPTY_VALUE, null);
+						RegistrationValidationDefinition.MESSAGE_EMPTY_VALUE, null);
 				throw new ValidatorException(facesMessage);
 			}
 		}
