@@ -24,21 +24,21 @@
 	<h:form>
 		<p:menubar id="mainMenu" autoSubmenuDisplay="true" rendered="true"
 			styleClass="mainMenu">
+			<p:menuitem value="Home" url="/pages/welcome.jsf" />
 			<p:submenu label="Administration"
 				rendered="#{loginController.hasAdministratorRole}">
-				<p:menuitem value="Registration" url="/pages/administration/registration.jsf">
+				<p:menuitem value="Registration"
+					url="/pages/administration/registration.jsf">
 				</p:menuitem>
 			</p:submenu>
 			<p:menuitem value="Logout" action="#{loginController.logout}"
-				rendered="#{sessionScope.user.userName != null}">
-
-			</p:menuitem>
+				rendered="#{sessionScope.user.userName != null}" />
 		</p:menubar>
 		<das:loginPanel id="loginPanel" caption="PLEASE LOGIN NOW"
 			username="#{loginController.userName}"
 			password="#{loginController.password}"
 			renderItem="#{sessionScope.user.userName == null}"
-			loginButtonLabel="Login" action="#{loginController.login}" />
+			loginButtonLabel="Login" />
 	</h:form>
 	<ui:insert name="body">include the body here</ui:insert>
 </h:body>

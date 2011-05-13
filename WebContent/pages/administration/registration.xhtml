@@ -10,10 +10,114 @@
 	<ui:define name="pageHeader">Registration</ui:define>
 	<ui:define name="body">
 		<h:messages />
-		<p:panel header="Registration"></p:panel>
-		<h:form>
-
-		</h:form>
+		<p:panel header="Registration">
+			<h:form>
+				<h:panelGrid columns="3">
+					<p:outputPanel>
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="Username:" />
+							<p:inputText id="userNameInput"
+								value="#{registrationController.userName}" size="28" />
+							<p:message for="userNameInput" />
+							<h:outputText value="Password:" />
+							<p:password id="passwordInput" feedback="false"
+								value="#{registrationController.password}" size="28" />
+							<p:message for="passwordInput" />
+							<h:outputText value="Confirmation:" />
+							<p:password id="passwordConfirmation" feedback="false"
+								value="#{registrationController.passwordConfirmation}" size="28" />
+							<p:message for="passwordConfirmation" />
+							<h:outputText value="Email:" />
+							<p:inputText id="userEmailInput"
+								value="#{registrationController.email}" size="28" />
+							<p:message for="userEmailInput" />
+							<h:outputText value="First Name:" />
+							<p:inputText id="userFirstNameInput"
+								value="#{registrationController.firstName}" size="28" />
+							<p:message for="userFirstNameInput" />
+							<h:outputText value="Last Name:" />
+							<p:inputText id="userLastNameInput"
+								value="#{registrationController.lastName}" size="28" />
+							<p:message for="userLastNameInput" />
+						</h:panelGrid>
+					</p:outputPanel>
+					<p:outputPanel>
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="Roles:" />
+							<p:pickList id="userRolesSelect"
+								value="#{registrationController.roleDefinitions}" var="role"
+								itemLabel="#{role}" itemValue="#{role}" style="height:30px;" />
+							<p:message for="userRolesSelect" />
+							<h:outputText value="" />
+							<p:commandButton id="userRoleRegistrationButton"
+								action="#{registrationController.displayUserRoleRegistrationPanel}"
+								value="New Role" ajax="false" />
+						</h:panelGrid>
+					</p:outputPanel>
+					<p:outputPanel>
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="Groups:" />
+							<p:pickList id="userGroupesSelect"
+								value="#{registrationController.groupDefinitions}" var="group"
+								itemLabel="#{group}" itemValue="#{group}" style="height:30px;" />
+							<p:message for="userGroupesSelect" />
+							<h:outputText value="" />
+							<p:commandButton id="userGroupRegistrationButton"
+								action="#{registrationController.displayUserGroupRegistrationPanel}"
+								value="New Group" ajax="false" />
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+				<hr/>
+				<p:commandButton id="registrationButton"
+					action="#{registrationController.performUserRegistration}"
+					value="SAVE" ajax="false" />
+			</h:form>
+		</p:panel>
+		<p:dialog id="userRoleRegistration" header="New User Role"
+			modal="true" minWidth="500"
+			rendered="#{registrationController.displayUserRoleRegistration}"
+			visible="true" styleClass="userRoleRegistrationDialog">
+			<p:messages />
+			<h:form>
+				<h:panelGrid columns="3">
+					<p:outputPanel>
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="Role Name:" />
+							<p:inputText id="roleNameInput"
+								value="#{registrationController.roleName}" size="28" />
+							<p:message for="roleNameInput" />
+							<h:outputText value="" />
+							<p:commandButton id="roleRegistrationButton"
+								action="#{registrationController.saveUserRole}" value="Save"
+								ajax="false" />
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		<p:dialog id="userGroupRegistration" header="New User Group"
+			modal="true" minWidth="500"
+			rendered="#{registrationController.displayUserGroupRegistration}"
+			visible="true" styleClass="userGroupRegistrationDialog">
+			<p:messages />
+			<h:form>
+				<h:panelGrid columns="3">
+					<p:outputPanel>
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="Group Name:" />
+							<p:inputText id="groupNameInput"
+								value="#{registrationController.groupName}" size="28" />
+							<p:message for="groupNameInput" />
+							<h:outputText value="" />
+							<p:commandButton id="registrationButton"
+								action="#{registrationController.saveUserGroup}" value="Save"
+								ajax="false" />
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>

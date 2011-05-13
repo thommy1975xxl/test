@@ -19,8 +19,6 @@
 	<composite:attribute name="password" required="true" />
 	<composite:attribute name="renderItem" required="false" default="true"/>
 	<composite:attribute name="loginButtonLabel" required="true"/>
-	<composite:attribute name="action" required="true" targets="loginButton"/>
-	<composite:actionSource name="loginEvent" targets="loginButton"/>
 </composite:interface>
 
 <composite:implementation>
@@ -36,7 +34,7 @@
 			<p:password id="passwordInput" feedback="false"
 				value="#{cc.attrs.password}" size="28" />
 			<h:outputText value="" />
-			<p:commandButton id="loginButton" action="#{cc.attrs.action}" value="#{cc.attrs.loginButtonLabel}"
+			<p:commandButton id="loginButton" action="#{loginController.login}" value="#{cc.attrs.loginButtonLabel}"
 				ajax="false" />
 		</h:panelGrid>
 

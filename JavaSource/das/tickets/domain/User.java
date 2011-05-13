@@ -28,6 +28,9 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user")
 	private Collection<UserRoleJoin> userRoleJoins;
 
+	@OneToMany(mappedBy = "user")
+	private Collection<UserGroupJoin> userGroupJoins;
+
 	// constructors
 	public User() {
 	}
@@ -71,6 +74,14 @@ public class User extends BaseEntity {
 
 	public void setUserRoleJoins(Collection<UserRoleJoin> userRoleJoins) {
 		this.userRoleJoins = userRoleJoins;
+	}
+
+	public Collection<UserGroupJoin> getUserGroupJoins() {
+		return userGroupJoins;
+	}
+
+	public void setUserGroupJoins(Collection<UserGroupJoin> userGroupJoins) {
+		this.userGroupJoins = userGroupJoins;
 	}
 
 }

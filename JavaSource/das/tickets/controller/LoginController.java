@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
 import das.tickets.config.RoleDefinition;
 import das.tickets.dao.LoginDao;
@@ -15,14 +15,14 @@ import das.tickets.service.MessageService;
 import das.tickets.service.SessionService;
 
 @ManagedBean(name = "loginController")
+@SessionScoped
 public class LoginController {
 
 	private String userName;
 
 	private String password;
 
-	@Inject
-	private LoginDao loginDao;
+	private final LoginDao loginDao = new LoginDao();
 
 	private boolean hasAdministratorRole = false;
 

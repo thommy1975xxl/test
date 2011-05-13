@@ -16,3 +16,8 @@
 
 		</p:dialog>
 		-->
+		
+							<h:selectManyMenu id="userRolesSelect"
+						value="#{registrationController.userRoles}">
+						<f:selectItems itemValue="#{registrationController.defineUserRoles}" />
+					</h:selectManyMenu >
