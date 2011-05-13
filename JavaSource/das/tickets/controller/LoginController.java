@@ -26,6 +26,7 @@ public class LoginController {
 
 	private boolean hasAdministratorRole = false;
 
+	// business methods
 	public void login() {
 		User user = loginDao.findUserByUserNameAndPassword(userName, password);
 		if (user == null) {

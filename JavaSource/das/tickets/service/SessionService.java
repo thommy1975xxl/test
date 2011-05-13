@@ -26,4 +26,11 @@ public class SessionService {
 		httpSession.invalidate();
 	}
 
+	public static Object getSessionAttribute(String attributeName) {
+		HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		Object obj = httpSession.getAttribute(attributeName);
+		return obj;
+	}
+
 }

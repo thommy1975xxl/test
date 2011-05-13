@@ -8,9 +8,9 @@ import javax.faces.bean.ManagedBean;
 
 import org.primefaces.model.DualListModel;
 
+import das.tickets.config.GroupDefinition;
 import das.tickets.config.RoleDefinition;
 import das.tickets.dao.RegistrationDao;
-import das.tickets.domain.UserGroup;
 
 @ManagedBean(name = "registrationController")
 @ApplicationScoped
@@ -42,10 +42,11 @@ public class RegistrationController {
 
 	private final RegistrationDao registrationDao = new RegistrationDao();
 
-	private boolean displayUserGroupRegistration = false;
+	private List<String> targetRole;
 
-	private boolean displayUserRoleRegistration = false;
+	private List<String> targetGroup;
 
+	// business methods
 	public void performUserRegistration() {
 		System.out.println(">>>>>>>>>>>" + roleDefinitions.getTarget().size());
 
@@ -54,7 +55,7 @@ public class RegistrationController {
 	public RegistrationController() {
 		// Roles
 		List<String> sourceRole = new ArrayList<String>();
-		List<String> targetRole = new ArrayList<String>();
+		targetRole = new ArrayList<String>();
 		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
 		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
 		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
@@ -62,30 +63,12 @@ public class RegistrationController {
 		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
 		// Groups
 		List<String> sourceGroup = new ArrayList<String>();
-		List<String> targetGroup = new ArrayList<String>();
-		List<UserGroup> groups = registrationDao.findAllGroups();
-		if (groups.size() > 0) {
-			for (UserGroup group : groups) {
-				sourceGroup.add(group.getGroupName());
-			}
-		}
+		targetGroup = new ArrayList<String>();
+		sourceGroup.add(GroupDefinition.GroupName.DEVELOPMENT.toString());
+		sourceGroup.add(GroupDefinition.GroupName.MARKETING.toString());
+		sourceGroup.add(GroupDefinition.GroupName.QA.toString());
+		sourceGroup.add(GroupDefinition.GroupName.SUPPORT.toString());
 		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
-	}
-
-	public void saveUserGroup() {
-		displayUserGroupRegistration = false;
-	}
-
-	public void saveUserRole() {
-		displayUserRoleRegistration = false;
-	}
-
-	public void displayUserGroupRegistrationPanel() {
-		displayUserGroupRegistration = true;
-	}
-
-	public void displayUserRoleRegistrationPanel() {
-		displayUserRoleRegistration = true;
 	}
 
 	// getter & setter
@@ -177,30 +160,28 @@ public class RegistrationController {
 		this.groupName = groupName;
 	}
 
-	public boolean isDisplayUserGroupRegistration() {
-		return displayUserGroupRegistration;
-	}
-
-	public void setDisplayUserGroupRegistration(
-			boolean displayUserGroupRegistration) {
-		this.displayUserGroupRegistration = displayUserGroupRegistration;
-	}
-
-	public boolean isDisplayUserRoleRegistration() {
-		return displayUserRoleRegistration;
-	}
-
-	public void setDisplayUserRoleRegistration(
-			boolean displayUserRoleRegistration) {
-		this.displayUserRoleRegistration = displayUserRoleRegistration;
-	}
-
 	public String getRoleName() {
 		return roleName;
 	}
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public List<String> getTargetRole() {
+		return targetRole;
+	}
+
+	public void setTargetRole(List<String> targetRole) {
+		this.targetRole = targetRole;
+	}
+
+	public List<String> getTargetGroup() {
+		return targetGroup;
+	}
+
+	public void setTargetGroup(List<String> targetGroup) {
+		this.targetGroup = targetGroup;
 	}
 
 }

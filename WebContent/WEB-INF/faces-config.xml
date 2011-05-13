@@ -20,4 +20,9 @@
             <var>msgs</var>
         </resource-bundle>
     </application>
+    
+    <validator>
+    	<validator-id>EmptyFieldValidator</validator-id>
+    	<validator-class>das.tickets.validator.EmptyFieldValidator</validator-class>
+    </validator>
 </faces-config>
