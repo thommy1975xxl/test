@@ -1,5 +1,7 @@
 package das.tickets.controller;
 
+import java.io.IOException;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -31,7 +33,12 @@ public class LoginController {
 		} else {
 			SessionService.setSessionAttribute("user", user);
 		}
+	}
 
+	public void logout() throws IOException {
+		SessionService.removeAllSessionAttributes();
+		FacesContext.getCurrentInstance().getExternalContext()
+				.redirect("./welcome.jsf");
 	}
 
 	// getter & setter
