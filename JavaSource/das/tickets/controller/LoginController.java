@@ -7,7 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import das.tickets.config.RoleDefinition;
 import das.tickets.dao.LoginDao;
+import das.tickets.domain.Role;
 import das.tickets.domain.User;
 import das.tickets.service.MessageService;
 import das.tickets.service.SessionService;
@@ -22,6 +24,8 @@ public class LoginController {
 	@Inject
 	private LoginDao loginDao;
 
+	private boolean hasAdministratorRole = false;
+
 	public void login() {
 		User user = loginDao.findUserByUserNameAndPassword(userName, password);
 		if (user == null) {
@@ -31,6 +35,12 @@ public class LoginController {
 							MessageService.WRONG_LOGIN,
 							MessageService.WRONG_LOGIN));
 		} else {
+			for (Role role : loginDao.findRolesByUserName(user.getUserName())) {
+				if (role.getRoleName().equals(
+						RoleDefinition.RoleName.ADMINISTRATOR.toString())) {
+					hasAdministratorRole = true;
+				}
+			}
 			SessionService.setSessionAttribute("user", user);
 		}
 	}
@@ -56,6 +66,14 @@ public class LoginController {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean isHasAdministratorRole() {
+		return hasAdministratorRole;
+	}
+
+	public void setHasAdministratorRole(boolean hasAdministratorRole) {
+		this.hasAdministratorRole = hasAdministratorRole;
 	}
 
 }

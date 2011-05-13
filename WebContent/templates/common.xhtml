@@ -13,30 +13,27 @@
 .loginDialog {
 	font-size: 12px;
 }
+
+.mainMenu {
+	font-size: 12px;
+}
 </style>
 </h:head>
 <h:body>
 	<h:messages />
 	<h:form>
-		<p:outputPanel id="logo">
-			<p:graphicImage url="/images/datameer_logo.png" alt="datameer_logo" />
-		</p:outputPanel>
-		<p:outputPanel id="menuButtonBar"
-			style="font-size:12px;position:relative;top:-12px;left:35px;">
-			<!-- 
-			<p:button value="Data" outcome="/pages/data/index.xhtml"
-				style="width:120px;" />
-			<p:button value="Analytics" outcome="/pages/analytics/index.xhtml"
-				style="width:120px;" />
-			<p:button value="Dashboards" outcome="/pages/dashboards/index.xhtml"
-				style="width:120px;position:relative;left:-1px;" />
-			<p:button value="Administration"
-				outcome="/pages/administration/index.xhtml"
-				style="width:120px;position:relative;left:-1px;" />
-				 -->
-			<p:commandButton id="logoutButton" action="#{loginController.logout}" value="Logout"
-				ajax="false" rendered="#{sessionScope.user.userName != null}"/>
-		</p:outputPanel>
+		<p:menubar id="mainMenu" autoSubmenuDisplay="true" rendered="true"
+			styleClass="mainMenu">
+			<p:submenu label="Administration"
+				rendered="#{loginController.hasAdministratorRole}">
+				<p:menuitem value="Registration" url="/pages/administration/registration.jsf">
+				</p:menuitem>
+			</p:submenu>
+			<p:menuitem value="Logout" action="#{loginController.logout}"
+				rendered="#{sessionScope.user.userName != null}">
+
+			</p:menuitem>
+		</p:menubar>
 		<das:loginPanel id="loginPanel" caption="PLEASE LOGIN NOW"
 			username="#{loginController.userName}"
 			password="#{loginController.password}"
