@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.prime.com.tr/ui">
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:das="http://java.sun.com/jsf/composite/das">
 <h:head>
 	<title></title>
 	<style type="text/css">
@@ -17,22 +18,12 @@
 <h:body>
 	<h:messages />
 	<h:form>
-		<p:dialog id="loginDialog" header="Please Login" modal="true"
-			rendered="#{sessionScope.user.userName == null}" visible="true" minWidth="300"
-			styleClass="loginDialog">
-			<p:messages />
-			<h:panelGrid columns="2">
-				<h:outputText value="Username:" />
-				<p:inputText id="userNameInput" value="#{loginController.userName}" size="28"/>
-				<h:outputText value="Password:" />
-				<p:password id="passwordInput" feedback="false"
-					value="#{loginController.password}" size="28" />
-				<h:outputText value="" />
-				<p:commandButton action="#{loginController.login()}" value="Login"
-					ajax="false" />
-			</h:panelGrid>
 
-		</p:dialog>
+		<das:loginPanel id="loginPanel" caption="PLEASE LOGIN NOW"
+			username="#{loginController.userName}"
+			password="#{loginController.password}"
+			renderItem="#{sessionScope.user.userName == null}"
+			loginButtonLabel="Login" action="#{loginController.login}"/>
 	</h:form>
 	<ui:insert name="body">include the body here</ui:insert>
 </h:body>

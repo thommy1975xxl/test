@@ -1,0 +1,18 @@
+		<!-- 
+		<p:dialog id="loginDialog" header="Please Login" modal="true"
+			rendered="#{sessionScope.user.userName == null}" visible="true" minWidth="300"
+			styleClass="loginDialog">
+			<p:messages />
+			<h:panelGrid columns="2">
+				<h:outputText value="Username:" />
+				<p:inputText id="userNameInput" value="#{loginController.userName}" size="28"/>
+				<h:outputText value="Password:" />
+				<p:password id="passwordInput" feedback="false"
+					value="#{loginController.password}" size="28" />
+				<h:outputText value="" />
+				<p:commandButton action="#{loginController.login()}" value="Login"
+					ajax="false" />
+			</h:panelGrid>
+
+		</p:dialog>
+		-->
