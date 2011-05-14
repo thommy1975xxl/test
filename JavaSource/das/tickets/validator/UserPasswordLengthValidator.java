@@ -21,7 +21,8 @@ public class UserPasswordLengthValidator implements Validator {
 					|| readValue.length() > RegistrationValidationDefinition.VALUE_USER_PASSWORD_MAX_LENGTH) {
 				FacesMessage facesMessage = new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
-						RegistrationValidationDefinition.MESSAGE_USERNAME_LENGTH, null);
+						RegistrationValidationDefinition.MESSAGE_USER_PASSWORD_LENGTH,
+						null);
 				throw new ValidatorException(facesMessage);
 			}
 		}
