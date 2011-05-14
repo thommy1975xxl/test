@@ -21,6 +21,8 @@
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
 								<f:validator
 									validatorId="das.tickets.validator.UserNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserNamePatternValidator" />
 							</p:inputText>
 							<p:message for="userNameInput" />
 							<h:outputText value="*Password:" />
@@ -30,6 +32,8 @@
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
 								<f:validator
 									validatorId="das.tickets.validator.UserPasswordLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserPasswordPatternValidator" />
 							</p:password>
 							<p:message for="passwordInput" />
 							<h:outputText value="*Confirmation:" />
@@ -45,7 +49,9 @@
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserNameEmailLengthValidator" />
+									validatorId="das.tickets.validator.UserEmailLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserEmailPatternValidator" />
 							</p:inputText>
 							<p:message for="userEmailInput" />
 							<h:outputText value="*First Name:" />
@@ -54,7 +60,9 @@
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserFirstNameValidator" />
+									validatorId="das.tickets.validator.UserFirstNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserFirstNamePatternValidator" />
 							</p:inputText>
 							<p:message for="userFirstNameInput" />
 							<h:outputText value="*Last Name:" />
@@ -62,8 +70,10 @@
 								value="#{registrationController.lastName}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
-									<f:validator
-									validatorId="das.tickets.validator.UserLastNameValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserLastNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserLastNamePatternValidator" />
 							</p:inputText>
 							<p:message for="userLastNameInput" />
 						</h:panelGrid>
