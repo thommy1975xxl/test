@@ -1,19 +1,25 @@
 package das.tickets.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.validator.ValidatorException;
 
 import org.primefaces.model.DualListModel;
 
 import das.tickets.config.GroupDefinition;
-import das.tickets.config.RegistrationValidationDefinition;
 import das.tickets.config.RoleDefinition;
 import das.tickets.dao.RegistrationDao;
+import das.tickets.domain.Role;
+import das.tickets.domain.User;
+import das.tickets.domain.UserGroup;
+import das.tickets.domain.UserGroupJoin;
+import das.tickets.domain.UserRoleJoin;
+import das.tickets.service.MessageService;
+import das.tickets.service.PasswordService;
+import das.tickets.service.SessionService;
 
 @ManagedBean(name = "registrationController")
 @ApplicationScoped
@@ -35,10 +41,6 @@ public class RegistrationController {
 
 	private String roleName;
 
-	private List<String> userRoles;
-
-	private List<String> userGroups;
-
 	private DualListModel<String> roleDefinitions;
 
 	private DualListModel<String> groupDefinitions;
@@ -51,13 +53,50 @@ public class RegistrationController {
 
 	// business methods
 	public void performUserRegistration() {
-		if (!password.equals(passwordConfirmation)) {
-			FacesMessage facesMessage = new FacesMessage(
-					FacesMessage.SEVERITY_ERROR,
-					RegistrationValidationDefinition.MESSAGE_EMPTY_VALUE, null);
-			throw new ValidatorException(facesMessage);
+		if (!roleDefinitions.getTarget().isEmpty()
+				&& !groupDefinitions.getTarget().isEmpty()) {
+			Date createdOn = new Date();
+			User createdByUser = (User) SessionService
+					.getSessionAttribute("user");
+			String createdBy = createdByUser.getUserName();
+			// user
+			User newUser = new User();
+			newUser.setCreatedBy(createdBy);
+			newUser.setCreatedOn(createdOn);
+			newUser.setDisabled(false);
+			newUser.setEmail(email);
+			newUser.setPassword(PasswordService.createHashedPassword(password));
+			newUser.setUserName(userName);
+			registrationDao.persist(newUser);
+			// roles
+			for (String newRole : roleDefinitions.getTarget()) {
+				Role role = new Role();
+				role.setCreatedBy(createdBy);
+				role.setCreatedOn(createdOn);
+				role.setRoleName(newRole);
+				registrationDao.persist(role);
+				// join
+				UserRoleJoin userRoleJoin = new UserRoleJoin();
+				userRoleJoin.setRole(role);
+				userRoleJoin.setUser(newUser);
+				registrationDao.persist(userRoleJoin);
+			}
+			// groups
+			for (String newGroup : groupDefinitions.getTarget()) {
+				UserGroup userGroup = new UserGroup();
+				userGroup.setCreatedBy(createdBy);
+				userGroup.setCreatedOn(createdOn);
+				userGroup.setGroupName(newGroup);
+				registrationDao.persist(userGroup);
+				// join
+				UserGroupJoin userGroupJoin = new UserGroupJoin();
+				userGroupJoin.setGroup(userGroup);
+				userGroupJoin.setUser(newUser);
+				registrationDao.persist(userGroupJoin);
+			}
+			MessageService.addFacesMessageInfo(
+					MessageService.REGISTRATION_SUCCESS, null);
 		}
-
 	}
 
 	public RegistrationController() {
@@ -128,28 +167,12 @@ public class RegistrationController {
 		this.lastName = lastName;
 	}
 
-	public List<String> getUserRoles() {
-		return userRoles;
-	}
-
-	public void setUserRoles(List<String> userRoles) {
-		this.userRoles = userRoles;
-	}
-
 	public DualListModel<String> getRoleDefinitions() {
 		return roleDefinitions;
 	}
 
 	public void setRoleDefinitions(DualListModel<String> roleDefinitions) {
 		this.roleDefinitions = roleDefinitions;
-	}
-
-	public List<String> getUserGroups() {
-		return userGroups;
-	}
-
-	public void setUserGroups(List<String> userGroups) {
-		this.userGroups = userGroups;
 	}
 
 	public DualListModel<String> getGroupDefinitions() {

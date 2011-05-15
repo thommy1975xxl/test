@@ -5,7 +5,9 @@ import javax.faces.context.FacesContext;
 
 public class MessageService {
 
-	public static final String WRONG_LOGIN = "Wrong login. Please try again.";
+	public static final String WRONG_LOGIN = "Wrong login. Please try again";
+
+	public static final String REGISTRATION_SUCCESS = "New user registrated";
 
 	/**
 	 * add a message to faces-context
@@ -18,6 +20,14 @@ public class MessageService {
 		FacesContext.getCurrentInstance().addMessage(
 				shortDescription,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, shortDescription,
+						longDescription));
+	}
+
+	public static void addFacesMessageInfo(String shortDescription,
+			String longDescription) {
+		FacesContext.getCurrentInstance().addMessage(
+				shortDescription,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, shortDescription,
 						longDescription));
 	}
 

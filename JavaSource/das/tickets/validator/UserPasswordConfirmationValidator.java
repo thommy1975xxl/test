@@ -18,7 +18,7 @@ public class UserPasswordConfirmationValidator implements Validator {
 
 		if (value instanceof String) {
 			UIComponent passwordComponent = facesContext.getViewRoot()
-					.findComponent("j_idt16:passwordInput");
+					.findComponent("j_idt17:passwordInput");
 			String passwordValue = (String) ((org.primefaces.component.password.Password) passwordComponent)
 					.getValue();
 			if (!value.equals(passwordValue)) {
