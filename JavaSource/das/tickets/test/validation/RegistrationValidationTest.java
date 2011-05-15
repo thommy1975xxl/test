@@ -505,4 +505,5 @@ public class RegistrationValidationTest {
 		assertTrue(roleDefinitions.getSource().size() > 0);
 		assertFalse(roleDefinitions.getTarget().size() > 0);
 	}
+
 }

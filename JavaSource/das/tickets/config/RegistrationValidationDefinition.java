@@ -76,4 +76,6 @@ public class RegistrationValidationDefinition {
 
 	public static final String MESSAGE_USER_LASTNAME_PATTERN = "Contains invalid characters";
 
+	public static final String MESSAGE_PASSWORD_CONFIRMATION = "Don't match with password";
+
 }

@@ -37,10 +37,12 @@
 							</p:password>
 							<p:message for="passwordInput" />
 							<h:outputText value="*Confirmation:" />
-							<p:password id="passwordConfirmation" feedback="false"
+							<p:password id="passwordConfirmation" feedback="false" 
 								value="#{registrationController.passwordConfirmation}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									<f:validator
+									validatorId="das.tickets.validator.UserPasswordConfirmationValidator" />
 							</p:password>
 							<p:message for="passwordConfirmation" />
 							<h:outputText value="*Email:" />

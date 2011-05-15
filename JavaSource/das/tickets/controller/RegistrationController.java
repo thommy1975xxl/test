@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.validator.ValidatorException;
 
 import org.primefaces.model.DualListModel;
 
 import das.tickets.config.GroupDefinition;
+import das.tickets.config.RegistrationValidationDefinition;
 import das.tickets.config.RoleDefinition;
 import das.tickets.dao.RegistrationDao;
 
@@ -48,7 +51,12 @@ public class RegistrationController {
 
 	// business methods
 	public void performUserRegistration() {
-		System.out.println(">>>>>>>>>>>" + roleDefinitions.getTarget().size());
+		if (!password.equals(passwordConfirmation)) {
+			FacesMessage facesMessage = new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,
+					RegistrationValidationDefinition.MESSAGE_EMPTY_VALUE, null);
+			throw new ValidatorException(facesMessage);
+		}
 
 	}
 
