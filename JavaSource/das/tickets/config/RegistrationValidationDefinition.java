@@ -78,4 +78,8 @@ public class RegistrationValidationDefinition {
 
 	public static final String MESSAGE_PASSWORD_CONFIRMATION = "Don't match with password";
 
+	public static final String MESSAGE_USERNAME_UNIQUENESS = "Just registrated";
+
+	public static final String MESSAGE_USER_EMAIL_UNIQUENESS = "Just registrated";
+
 }

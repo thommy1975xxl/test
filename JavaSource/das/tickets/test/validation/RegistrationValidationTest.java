@@ -23,6 +23,7 @@ import das.tickets.validator.UserFirstNamePatternValidator;
 import das.tickets.validator.UserLastNamePatternValidator;
 import das.tickets.validator.UserNameLengthValidator;
 import das.tickets.validator.UserNamePatternValidator;
+import das.tickets.validator.UserNameUniquenessValidator;
 import das.tickets.validator.UserPasswordLengthValidator;
 import das.tickets.validator.UserPasswordPatternValidator;
 
@@ -504,6 +505,22 @@ public class RegistrationValidationTest {
 		}
 		assertTrue(roleDefinitions.getSource().size() > 0);
 		assertFalse(roleDefinitions.getTarget().size() > 0);
+	}
+
+	@Test
+	public void testUserNameUniqueness() {
+		String userName = "admin";
+		UserNameUniquenessValidator uniquenessValidator = new UserNameUniquenessValidator();
+		Object value = new String(userName);
+		try {
+			uniquenessValidator.validate(facesContext, uiComponent, value);
+			fail();
+		} catch (javax.faces.validator.ValidatorException e) {
+			assertTrue(e
+					.getFacesMessage()
+					.getDetail()
+					.equals(RegistrationValidationDefinition.MESSAGE_USERNAME_UNIQUENESS));
+		}
 	}
 
 }

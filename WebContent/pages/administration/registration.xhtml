@@ -23,6 +23,8 @@
 									validatorId="das.tickets.validator.UserNameLengthValidator" />
 								<f:validator
 									validatorId="das.tickets.validator.UserNamePatternValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserNameUniquenessValidator" />
 							</p:inputText>
 							<p:message for="userNameInput" />
 							<h:outputText value="*Password:" />
@@ -37,11 +39,11 @@
 							</p:password>
 							<p:message for="passwordInput" />
 							<h:outputText value="*Confirmation:" />
-							<p:password id="passwordConfirmation" feedback="false" 
+							<p:password id="passwordConfirmation" feedback="false"
 								value="#{registrationController.passwordConfirmation}" size="28">
 								<f:validator
 									validatorId="das.tickets.validator.EmptyFieldValidator" />
-									<f:validator
+								<f:validator
 									validatorId="das.tickets.validator.UserPasswordConfirmationValidator" />
 							</p:password>
 							<p:message for="passwordConfirmation" />
@@ -54,6 +56,8 @@
 									validatorId="das.tickets.validator.UserEmailLengthValidator" />
 								<f:validator
 									validatorId="das.tickets.validator.UserEmailPatternValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.UserEmailUniquenessValidator" />
 							</p:inputText>
 							<p:message for="userEmailInput" />
 							<h:outputText value="*First Name:" />
