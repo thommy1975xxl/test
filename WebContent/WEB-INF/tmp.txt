@@ -21,3 +21,442 @@
 						value="#{registrationController.userRoles}">
 						<f:selectItems itemValue="#{registrationController.defineUserRoles}" />
 					</h:selectManyMenu >
+					
+					FacesMessage(s) have been enqueued, but may not have been displayed
+					
+											<!-- 
+						<h:commandButton id="removeUserButton" value="R" ajax="false"
+							action="#{registrationController.removeUser(user.id)}"
+							immediate="true" rendered="#{!user.userName.equals('admin')}"
+							image="#{resource['images:delete.png']}"
+							update="userDataTable msgs" >
+						</h:commandButton on>
+						<p:tooltip for="removeUserButton" value="Remove user"
+							showEffect="fade" hideEffect="fade" showEffectLength="500"
+							hideEffectLength="500" />
+-->
+
+
+
+package das.tickets.controller;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.model.DualListModel;
+
+import das.tickets.config.GroupDefinition;
+import das.tickets.config.GroupDefinition.GroupName;
+import das.tickets.config.MessageDefinition;
+import das.tickets.config.RoleDefinition;
+import das.tickets.config.RoleDefinition.RoleName;
+import das.tickets.dao.RegistrationDao;
+import das.tickets.domain.Role;
+import das.tickets.domain.User;
+import das.tickets.domain.UserGroup;
+import das.tickets.domain.UserGroupJoin;
+import das.tickets.domain.UserRoleJoin;
+import das.tickets.service.PasswordService;
+import das.tickets.service.SessionService;
+
+@ManagedBean(name = "registrationController")
+// @RequestScoped
+public class RegistrationController {
+
+	private String userName;
+
+	private String password;
+
+	private String passwordConfirmation;
+
+	private String email;
+
+	private String firstName;
+
+	private String lastName;
+
+	private String groupName;
+
+	private String roleName;
+
+	private DualListModel<String> roleDefinitions;
+
+	private DualListModel<String> groupDefinitions;
+
+	private final RegistrationDao registrationDao = new RegistrationDao();
+
+	private List<String> targetRole;
+
+	private List<String> sourceRole;
+
+	private List<String> targetGroup;
+
+	private List<String> sourceGroup;
+
+	private List<User> allUsersByCreationDate;
+
+	private User userToRemove;
+
+	private User userToUpdate;
+
+	private boolean updateMode;
+
+	private String reservedUserName;
+
+	// constructors
+	public RegistrationController() {
+
+		// Roles
+		List<String> sourceRole = new ArrayList<String>();
+		targetRole = new ArrayList<String>();
+		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
+		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
+		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
+		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
+		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
+		// Groups
+		List<String> sourceGroup = new ArrayList<String>();
+		targetGroup = new ArrayList<String>();
+		sourceGroup.add(GroupDefinition.GroupName.DEVELOPMENT.toString());
+		sourceGroup.add(GroupDefinition.GroupName.MARKETING.toString());
+		sourceGroup.add(GroupDefinition.GroupName.QA.toString());
+		sourceGroup.add(GroupDefinition.GroupName.SUPPORT.toString());
+		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
+		// all users
+		allUsersByCreationDate = registrationDao
+				.findAllUsersByRegistrationDate();
+	}
+
+	// business methods
+	public String performUserRegistration() {
+		if (!roleDefinitions.getTarget().isEmpty()
+				&& !groupDefinitions.getTarget().isEmpty()) {
+			Date createdOn = new Date();
+			User createdByUser = (User) SessionService
+					.getSessionAttribute("user");
+			String createdBy = createdByUser.getUserName();
+			// user
+			User newUser = new User();
+			newUser.setCreatedBy(createdBy);
+			newUser.setCreatedOn(createdOn);
+			newUser.setDisabled(false);
+			newUser.setEmail(email);
+			newUser.setPassword(PasswordService.createHashedPassword(password));
+			newUser.setUserName(userName);
+			newUser.setFirstName(firstName);
+			newUser.setLastName(lastName);
+			registrationDao.persist(newUser);
+			// roles
+			for (String newRole : roleDefinitions.getTarget()) {
+				Role role = new Role();
+				role.setCreatedBy(createdBy);
+				role.setCreatedOn(createdOn);
+				role.setRoleName(newRole);
+				registrationDao.persist(role);
+				// join
+				UserRoleJoin userRoleJoin = new UserRoleJoin();
+				userRoleJoin.setRole(role);
+				userRoleJoin.setUser(newUser);
+				registrationDao.persist(userRoleJoin);
+			}
+			// groups
+			for (String newGroup : groupDefinitions.getTarget()) {
+				UserGroup userGroup = new UserGroup();
+				userGroup.setCreatedBy(createdBy);
+				userGroup.setCreatedOn(createdOn);
+				userGroup.setGroupName(newGroup);
+				registrationDao.persist(userGroup);
+				// join
+				UserGroupJoin userGroupJoin = new UserGroupJoin();
+				userGroupJoin.setGroup(userGroup);
+				userGroupJoin.setUser(newUser);
+				registrationDao.persist(userGroupJoin);
+			}
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							MessageDefinition.REGISTRATION_SUCCESS,
+							MessageDefinition.REGISTRATION_SUCCESS));
+			resetFields();
+		}
+		return "/pages/administration/registration.xhtml";
+	}
+
+	public String removeUser(Long id) {
+		registrationDao.removeUser(id);
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						MessageDefinition.REGISTRATION_REMOVE,
+						MessageDefinition.REGISTRATION_REMOVE));
+		return "/pages/administration/registration.xhtml";
+	}
+
+	@SuppressWarnings("rawtypes")
+	public String prepareUpdateUser(Long id) {
+		updateMode = true;
+		userToUpdate = registrationDao.getEntityManager().find(User.class, id);
+		reservedUserName = userToUpdate.getUserName();
+		userName = userToUpdate.getUserName();
+		firstName = userToUpdate.getFirstName();
+		lastName = userToUpdate.getLastName();
+		email = userToUpdate.getEmail();
+		// roles
+		targetRole = new ArrayList<String>();
+		sourceRole = new ArrayList<String>();
+		for (Role role : registrationDao.findRolesByUser(userToUpdate)) {
+			targetRole.add(role.getRoleName());
+		}
+		// role-enum to source roles
+		for (RoleName roleName : RoleDefinition.RoleName.values()) {
+			sourceRole.add(roleName.toString());
+		}
+		// remove found target roles from source roles
+		Iterator sourceRoleIterator = sourceRole.iterator();
+		while (sourceRoleIterator.hasNext()) {
+			for (String readTargetRole : targetRole) {
+				if (readTargetRole.equals(sourceRoleIterator.next())) {
+					sourceRoleIterator.remove();
+				}
+			}
+		}
+		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
+		// groups
+		targetGroup = new ArrayList<String>();
+		sourceGroup = new ArrayList<String>();
+		for (UserGroup userGroup : registrationDao
+				.findGroupsByUser(userToUpdate)) {
+			targetGroup.add(userGroup.getGroupName());
+		}
+		// group-enum to source roles
+		for (GroupName groupName : GroupDefinition.GroupName.values()) {
+			sourceGroup.add(groupName.toString());
+		}
+		// remove found target groups from source groups
+		Iterator sourceGroupIterator = sourceGroup.iterator();
+		while (sourceGroupIterator.hasNext()) {
+			for (String readTargetGroup : targetGroup) {
+				if (readTargetGroup.equals(sourceGroupIterator.next())) {
+					sourceGroupIterator.remove();
+				}
+			}
+		}
+		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
+
+		return "/pages/administration/registration.xhtml";
+	}
+
+	public String selectUserToRemove(Long id) {
+		userToRemove = registrationDao.getEntityManager().find(User.class, id);
+		return "/pages/administration/registration.xhtml";
+	}
+
+	public String updateUser(User user) {
+		System.out.println(">>>>>merge");
+		userToUpdate = user;
+		userToUpdate.setModifiedOn(new Date());
+		// userToUpdate = registrationDao.findUserByName(userName).get(0);
+		// System.out.println(">>>>>merge-user" + userToUpdate.getId());
+		// userToUpdate
+		// .setPassword(PasswordService.createHashedPassword(password));
+		// userToUpdate.setUserName(userName);
+		// userToUpdate.setFirstName(firstName);
+		userToUpdate.setLastName("EEEE");
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						MessageDefinition.REGISTRATION_UPDATE,
+						MessageDefinition.REGISTRATION_UPDATE));
+
+		registrationDao.mergeUser(userToUpdate);
+		resetFields();
+		return "/pages/administration/registration.xhtml";
+	}
+
+	// private functions
+	private void toggleRegistrationMode() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> params = fc.getExternalContext()
+				.getRequestParameterMap();
+		String readMode = params.get("um");
+		if (readMode != null) {
+			if (readMode.toLowerCase().equals("0")) {
+				updateMode = false;
+			} else {
+				updateMode = true;
+			}
+		} else {
+			updateMode = false;
+		}
+	}
+
+	private void resetFields() {
+		userName = "";
+		password = "";
+		passwordConfirmation = "";
+		email = "";
+		firstName = "";
+		lastName = "";
+	}
+
+	// getter & setter
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPasswordConfirmation() {
+		return passwordConfirmation;
+	}
+
+	public void setPasswordConfirmation(String passwordConfirmation) {
+		this.passwordConfirmation = passwordConfirmation;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public DualListModel<String> getRoleDefinitions() {
+		return roleDefinitions;
+	}
+
+	public void setRoleDefinitions(DualListModel<String> roleDefinitions) {
+		this.roleDefinitions = roleDefinitions;
+	}
+
+	public DualListModel<String> getGroupDefinitions() {
+		return groupDefinitions;
+	}
+
+	public void setGroupDefinitions(DualListModel<String> groupDefinitions) {
+		this.groupDefinitions = groupDefinitions;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public List<String> getTargetRole() {
+		return targetRole;
+	}
+
+	public void setTargetRole(List<String> targetRole) {
+		this.targetRole = targetRole;
+	}
+
+	public List<String> getTargetGroup() {
+		return targetGroup;
+	}
+
+	public void setTargetGroup(List<String> targetGroup) {
+		this.targetGroup = targetGroup;
+	}
+
+	public List<User> getAllUsersByCreationDate() {
+		return allUsersByCreationDate;
+	}
+
+	public void setAllUsersByCreationDate(List<User> allUsersByCreationDate) {
+		this.allUsersByCreationDate = allUsersByCreationDate;
+	}
+
+	public User getUserToRemove() {
+		return userToRemove;
+	}
+
+	public void setUserToRemove(User userToRemove) {
+		this.userToRemove = userToRemove;
+	}
+
+	public User getUserToUpdate() {
+		return userToUpdate;
+	}
+
+	public void setUserToUpdate(User userToUpdate) {
+		this.userToUpdate = userToUpdate;
+	}
+
+	public List<String> getSourceRole() {
+		return sourceRole;
+	}
+
+	public void setSourceRole(List<String> sourceRole) {
+		this.sourceRole = sourceRole;
+	}
+
+	public List<String> getSourceGroup() {
+		return sourceGroup;
+	}
+
+	public void setSourceGroup(List<String> sourceGroup) {
+		this.sourceGroup = sourceGroup;
+	}
+
+	public boolean isUpdateMode() {
+		return updateMode;
+	}
+
+	public void setUpdateMode(boolean updateMode) {
+		this.updateMode = updateMode;
+	}
+
+	public String getReservedUserName() {
+		return reservedUserName;
+	}
+
+	public void setReservedUserName(String reservedUserName) {
+		this.reservedUserName = reservedUserName;
+	}
+
+}

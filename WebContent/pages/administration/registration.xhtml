@@ -3,109 +3,141 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core">
+
+
 
 <ui:composition template="/templates/common.xhtml">
 	<ui:define name="pageTitle">Registration</ui:define>
 	<ui:define name="pageHeader">Registration</ui:define>
 	<ui:define name="body">
-		<h:form>
-			<p:panel header="Registration">
+		<h:form id="registrationForm">
+			<p:panel id="registrationPanel" header="Registration"
+				style="vertical-align: top;">
+				<p:messages id="msgs" globalOnly="true" rendered="true" />
 				<h:panelGrid columns="3">
-					<p:outputPanel>
-						<h:panelGrid columns="3" style="font-size:12px;">
-							<h:outputText value="*Username:" />
-							<p:inputText id="userNameInput"
-								value="#{registrationController.userName}" size="28">
-								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserNameLengthValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserNamePatternValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserNameUniquenessValidator" />
-							</p:inputText>
+					<p:outputPanel style="vertical-align:top;">
+						<h:panelGrid columns="4" style="font-size:12px;">
+							<h:outputText value="**" />
+							<h:outputText value="Username:" />
+							<c:if test="#{registrationController.updateMode}">
+								<p:inputText id="userNameInput"
+									value="#{registrationController.userName}" size="28"
+									disabled="#{registrationController.updateMode}"
+									style="background-color:#FFFF66;">
+								</p:inputText>
+							</c:if>
+							<c:if test="#{!registrationController.updateMode}">
+								<p:inputText id="userNameInput"
+									value="#{registrationController.userName}" size="28">
+									<f:validator
+										validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserNameLengthValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserNamePatternValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserNameUniquenessValidator" />
+								</p:inputText>
+							</c:if>
 							<p:message for="userNameInput" />
-							<h:outputText value="*Password:" />
+							<h:outputText value="*" />
+							<h:outputText value="Password:" />
 							<p:password id="passwordInput" feedback="false"
 								value="#{registrationController.password}" size="28">
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserPasswordLengthValidator" />
+									validatorId="das.tickets.validator.registration.UserPasswordLengthValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserPasswordPatternValidator" />
+									validatorId="das.tickets.validator.registration.UserPasswordPatternValidator" />
 							</p:password>
 							<p:message for="passwordInput" />
-							<h:outputText value="*Confirmation:" />
+							<h:outputText value="*" />
+							<h:outputText value="Confirmation:" />
 							<p:password id="passwordConfirmation" feedback="false"
 								value="#{registrationController.passwordConfirmation}" size="28">
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserPasswordConfirmationValidator" />
+									validatorId="das.tickets.validator.registration.UserPasswordConfirmationValidator" />
 							</p:password>
 							<p:message for="passwordConfirmation" />
-							<h:outputText value="*Email:" />
-							<p:inputText id="userEmailInput"
-								value="#{registrationController.email}" size="28">
-								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserEmailLengthValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserEmailPatternValidator" />
-								<f:validator
-									validatorId="das.tickets.validator.UserEmailUniquenessValidator" />
-							</p:inputText>
+							<h:outputText value="**" />
+							<h:outputText value="Email:" />
+							<c:if test="#{registrationController.updateMode}">
+								<p:inputText id="userEmailInput"
+									value="#{registrationController.email}" size="28"
+									disabled="#{registrationController.updateMode}"
+									style="background-color:#FFFF66;">
+								</p:inputText>
+							</c:if>
+							<c:if test="#{!registrationController.updateMode}">
+								<p:inputText id="userEmailInput"
+									value="#{registrationController.email}" size="28"
+									disabled="#{!registrationController.updateMode}">
+									<f:validator
+										validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserEmailLengthValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserEmailPatternValidator" />
+									<f:validator
+										validatorId="das.tickets.validator.registration.UserEmailUniquenessValidator" />
+								</p:inputText>
+							</c:if>
 							<p:message for="userEmailInput" />
-							<h:outputText value="*First Name:" />
+							<h:outputText value="*" />
+							<h:outputText value="First Name:" />
 							<p:inputText id="userFirstNameInput"
 								value="#{registrationController.firstName}" size="28">
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserFirstNameLengthValidator" />
+									validatorId="das.tickets.validator.registration.UserFirstNameLengthValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserFirstNamePatternValidator" />
+									validatorId="das.tickets.validator.registration.UserFirstNamePatternValidator" />
 							</p:inputText>
 							<p:message for="userFirstNameInput" />
-							<h:outputText value="*Last Name:" />
+							<h:outputText value="*" />
+							<h:outputText value="Last Name:" />
 							<p:inputText id="userLastNameInput"
 								value="#{registrationController.lastName}" size="28">
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserLastNameLengthValidator" />
+									validatorId="das.tickets.validator.registration.UserLastNameLengthValidator" />
 								<f:validator
-									validatorId="das.tickets.validator.UserLastNamePatternValidator" />
+									validatorId="das.tickets.validator.registration.UserLastNamePatternValidator" />
 							</p:inputText>
 							<p:message for="userLastNameInput" />
 						</h:panelGrid>
 					</p:outputPanel>
 					<p:outputPanel>
-						<h:panelGrid columns="2" style="font-size:12px;">
-							<h:outputText value="*Roles:" />
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="*" />
+							<h:outputText value="Roles:" style="vertical-align: top;" />
 							<p:pickList id="userRolesSelect"
 								value="#{registrationController.roleDefinitions}" var="role"
 								itemLabel="#{role}" itemValue="#{role}" style="height:30px;">
 
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 							</p:pickList>
 							<h:outputText value="" />
 							<p:message for="userRolesSelect" />
 						</h:panelGrid>
 					</p:outputPanel>
 					<p:outputPanel>
-						<h:panelGrid columns="2" style="font-size:12px;">
-							<h:outputText value="*Groups:" />
+						<h:panelGrid columns="3" style="font-size:12px;">
+							<h:outputText value="*" />
+							<h:outputText value="Groups:" />
 							<p:pickList id="userGroupesSelect"
 								value="#{registrationController.groupDefinitions}" var="group"
 								itemLabel="#{group}" itemValue="#{group}" style="height:30px;">
 								<f:validator
-									validatorId="das.tickets.validator.EmptyFieldValidator" />
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
 							</p:pickList>
 							<h:outputText value="" />
 							<p:message for="userGroupesSelect" />
@@ -113,11 +145,139 @@
 					</p:outputPanel>
 				</h:panelGrid>
 				<hr />
-				<h:panelGrid style="font-size:12px;">
+				<h:panelGrid style="font-size:12px;" columns="3">
+					<p:commandButton action="/pages/administration/registration.xhtml"
+						value="NEW" ajax="false" immediate="true">
+						<f:param name="um" value="0" />
+					</p:commandButton>
 					<p:commandButton id="registrationButton"
 						action="#{registrationController.performUserRegistration}"
-						value="SAVE" ajax="false" />
+						value="SAVE" ajax="false" update="userDataTable msgs"
+						rendered="#{registrationController.updateMode==false}">
+					</p:commandButton>
+					<p:commandButton id="updateRegistrationButton"
+						action="#{registrationController.updateUser}" value="Update"
+						ajax="true" update="userDataTable msgs"
+						rendered="#{registrationController.updateMode}">
+						<f:ajax event="click" render="userDataTable"/>
+					</p:commandButton>
+
 				</h:panelGrid>
+				<hr />
+				<h:panelGrid columns="2">
+					<h:panelGrid columns="2">
+						<h:outputText value="MODE:" />
+						<h:outputText value="Creation"
+							rendered="#{!registrationController.updateMode}" />
+						<h:outputText value="Update"
+							rendered="#{registrationController.updateMode}" />
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<h:outputText value="*/**" style="font-size:10px;" />
+						<h:outputText value="required for creation"
+							style="font-size:10px;" />
+						<h:outputText value="**" style="font-size:10px;" />
+						<h:outputText value="disabled for updates" style="font-size:10px;" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<hr />
+				<p:dataTable id="userDataTable" var="user"
+					value="#{registrationController.allUsersByCreationDate}"
+					paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15,25,50" style="font-size:12px;">
+					<f:facet name="header">
+						<h:outputText value="User Summary" />
+					</f:facet>
+					<!-- 
+					<ui:param name="userToRemove" value="#{user}" />
+					 -->
+					<p:column style="">
+						<f:facet name="header">
+							<h:outputText value="Action" />
+						</f:facet>
+						<h:commandButton id="removeUserButton"
+							action="#{registrationController.removeUser(user.id)}"
+							immediate="true" rendered="#{!user.userName.equals('admin')}"
+							image="/resources/images/delete.png" style="" />
+						<p:tooltip for="removeUserButton" value="Remove user"
+							showEffect="fade" hideEffect="fade" showEffectLength="500" />
+						<h:commandButton id="updateUserButton"
+							action="#{registrationController.prepareUpdateUser(user.id)}"
+							rendered="#{!user.userName.equals('admin')}" immediate="true"
+							image="/resources/images/update.png" style="margin-left:3px;" />
+						<p:tooltip for="updateUserButton" value="Update user"
+							showEffect="fade" hideEffect="fade" showEffectLength="500"
+							hideEffectLength="500" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.userName}"
+						filterBy="#{user.userName}" filterStyle="text-align:left;">
+						<f:facet name="header">
+							<h:outputText value="Username" />
+						</f:facet>
+						<h:outputText value="#{user.userName}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.firstName}"
+						filterBy="#{user.firstName}">
+						<f:facet name="header">
+							<h:outputText value="First Name" />
+						</f:facet>
+						<h:outputText value="#{user.firstName}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.lastName}"
+						filterBy="#{user.lastName}">
+						<f:facet name="header">
+							<h:outputText value="Last Name" />
+						</f:facet>
+						<h:outputText value="#{user.lastName}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.email}" filterBy="#{user.email}">
+						<f:facet name="header">
+							<h:outputText value="Email" />
+						</f:facet>
+						<h:outputText value="#{user.email}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.createdBy}"
+						filterBy="#{user.createdBy}">
+						<f:facet name="header">
+							<h:outputText value="Created By" />
+						</f:facet>
+						<h:outputText value="#{user.createdBy}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.createdOn}"
+						filterBy="#{user.createdOn}">
+						<f:facet name="header">
+							<h:outputText value="Created On" />
+						</f:facet>
+						<h:outputText value="#{user.createdOn}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="" sortBy="#{user.modifiedBy}"
+						filterBy="#{user.modifiedBy}">
+						<f:facet name="header">
+							<h:outputText value="Modified By" />
+						</f:facet>
+						<h:outputText value="#{user.modifiedBy}" />
+					</p:column>
+
+					<p:column style="" sortBy="#{user.modifiedOn}"
+						filterBy="#{user.modifiedOn}">
+						<f:facet name="header">
+							<h:outputText value="Modified On" />
+						</f:facet>
+						<h:outputText value="#{user.modifiedOn}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
 			</p:panel>
 		</h:form>
 	</ui:define>

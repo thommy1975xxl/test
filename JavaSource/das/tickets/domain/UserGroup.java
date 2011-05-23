@@ -3,7 +3,7 @@ package das.tickets.domain;
 import java.util.Collection;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,8 +17,8 @@ public class UserGroup extends BaseEntity {
 	@Size(max = 50)
 	private String groupName;
 
-	@OneToMany(mappedBy = "group")
-	private Collection<UserGroupJoin> userGroupJoins;
+	@ManyToMany(mappedBy = "groups")
+	private Collection<User> users;
 
 	// constructors
 	public UserGroup() {
@@ -33,12 +33,12 @@ public class UserGroup extends BaseEntity {
 		this.groupName = groupName;
 	}
 
-	public Collection<UserGroupJoin> getUserGroupJoins() {
-		return userGroupJoins;
+	public Collection<User> getUsers() {
+		return users;
 	}
 
-	public void setUserGroupJoins(Collection<UserGroupJoin> userGroupJoins) {
-		this.userGroupJoins = userGroupJoins;
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 
 }

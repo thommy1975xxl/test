@@ -7,8 +7,10 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:das="http://java.sun.com/jsf/composite/das">
+<f:loadBundle basename="registration" var="regProp" />
 <h:head>
 	<title></title>
+	<h:outputStylesheet library="css" name="mycustom.css" />
 	<style type="text/css">
 .loginDialog {
 	font-size: 12px;
@@ -17,23 +19,66 @@
 .mainMenu {
 	font-size: 12px;
 }
+
+.popUp {
+	font-size: 12px;
+}
+
+.pf-picklist-source,.pf-picklist-target {
+	width: 305px;
+	height: 30px;
+}
+
+#userRegistrationTextFields {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
+
+#userRegistrationRolesSelect {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
+
+#userRegistrationGroupsSelect {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
 </style>
+	<script type="text/javascript">
+function testFunction()
+{ 
+	alert(document.getElementById("hiddenUserId"));
+}
+</script>
 </h:head>
 <h:body>
-	<p:messages globalOnly="false" />
 	<h:form>
 		<p:menubar id="mainMenu" autoSubmenuDisplay="true" rendered="true"
 			styleClass="mainMenu">
 			<p:menuitem value="Home" url="/pages/welcome.jsf" />
 			<p:submenu label="Administration"
 				rendered="#{loginController.hasAdministratorRole}">
-				<p:menuitem value="Registration"
-					url="/pages/administration/registration.jsf">
+				<p:submenu label="Account" icon="user-icon">
+					<p:menuitem value="Create"
+						url="/pages/administration/registration/new.jsf" icon="new-icon" />
+					<p:menuitem value="Update"
+						url="/pages/administration/registration/update.jsf"
+						icon="update-icon" />
+					<p:menuitem value="Remove"
+						url="/pages/administration/registration/remove.jsf"
+						icon="delete-icon" />
+				</p:submenu>
+				<p:menuitem value="Accounts" icon="user-icon"
+					url="/pages/administration/registration.jsf?um=0">
 				</p:menuitem>
 			</p:submenu>
 			<p:menuitem value="Logout" action="#{loginController.logout}"
 				rendered="#{sessionScope.user.userName != null}" />
 		</p:menubar>
+
 		<das:loginPanel id="loginPanel" caption="PLEASE LOGIN NOW"
 			username="#{loginController.userName}"
 			password="#{loginController.password}"

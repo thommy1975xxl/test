@@ -7,11 +7,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import das.tickets.config.MessageDefinition;
 import das.tickets.config.RoleDefinition;
+import das.tickets.dao.BootstrapDao;
 import das.tickets.dao.LoginDao;
 import das.tickets.domain.Role;
 import das.tickets.domain.User;
-import das.tickets.service.MessageService;
 import das.tickets.service.SessionService;
 
 @ManagedBean(name = "loginController")
@@ -26,15 +27,18 @@ public class LoginController {
 
 	private boolean hasAdministratorRole = false;
 
+	private final BootstrapDao bootstrapDao = new BootstrapDao();
+
 	// business methods
 	public void login() {
+		bootstrapDao.detectAdminUser();
 		User user = loginDao.findUserByUserNameAndPassword(userName, password);
-		if (user == null) {
+		if (user == null || user.getDisabled()) {
 			FacesContext.getCurrentInstance().addMessage(
-					MessageService.WRONG_LOGIN,
+					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							MessageService.WRONG_LOGIN,
-							MessageService.WRONG_LOGIN));
+							MessageDefinition.WRONG_LOGIN,
+							MessageDefinition.WRONG_LOGIN));
 		} else {
 			for (Role role : loginDao.findRolesByUserName(user.getUserName())) {
 				if (role.getRoleName().equals(

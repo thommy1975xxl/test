@@ -3,7 +3,7 @@ package das.tickets.domain;
 import java.util.Collection;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,8 +17,8 @@ public class Role extends BaseEntity {
 	@Size(max = 50)
 	private String roleName;
 
-	@OneToMany(mappedBy = "role")
-	private Collection<UserRoleJoin> userRoleJoins;
+	@ManyToMany(mappedBy = "roles")
+	private Collection<User> users;
 
 	// constructors
 	public Role() {
@@ -33,12 +33,12 @@ public class Role extends BaseEntity {
 		this.roleName = roleName;
 	}
 
-	public Collection<UserRoleJoin> getUserRoleJoins() {
-		return userRoleJoins;
+	public Collection<User> getUsers() {
+		return users;
 	}
 
-	public void setUserRoleJoins(Collection<UserRoleJoin> userRoleJoins) {
-		this.userRoleJoins = userRoleJoins;
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 
 }

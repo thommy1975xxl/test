@@ -1,0 +1,33 @@
+.user-icon {
+	width: 16px;
+	height: 16px;
+	margin-right:5px;
+	background: url(#{resource['images/user.png']}) !important;
+	
+}
+
+.delete-icon {
+	width: 16px;
+	height: 16px;
+	margin-right:5px;
+	background: url(#{resource['images/delete.png']}) !important;
+	
+}
+
+.update-icon {
+	width: 16px;
+	height: 16px;
+	margin-right:5px;
+	background: url(#{resource['images/update.png']}) !important;
+	
+}
+
+.new-icon {
+	width: 16px;
+	height: 16px;
+	margin-right:5px;
+	background: url(#{resource['images/new.png']}) !important;
+	
+}
+
+

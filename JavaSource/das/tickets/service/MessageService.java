@@ -1,34 +1,60 @@
 package das.tickets.service;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 public class MessageService {
 
-	public static final String WRONG_LOGIN = "Wrong login. Please try again";
+	private static ResourceBundle bundle;
 
-	public static final String REGISTRATION_SUCCESS = "New user registrated";
-
-	/**
-	 * add a message to faces-context
-	 * 
-	 * @param shortDescription
-	 * @param longDescription
-	 */
-	public static void addFacesMessageError(String shortDescription,
-			String longDescription) {
-		FacesContext.getCurrentInstance().addMessage(
-				shortDescription,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, shortDescription,
-						longDescription));
+	private static ResourceBundle getBundle(String bundleName) {
+		if (bundle == null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			bundle = context.getApplication().getResourceBundle(context,
+					bundleName);
+		}
+		return bundle;
 	}
 
-	public static void addFacesMessageInfo(String shortDescription,
-			String longDescription) {
+	public static String getValue(String ressourceBundleName, String key) {
+
+		String result = null;
+		try {
+			result = getBundle(ressourceBundleName).getString(key);
+		} catch (MissingResourceException e) {
+			result = "???" + key + "??? not found";
+		}
+		return result;
+	}
+
+	public static void displayFacesMessageInfo(String propertyBundle,
+			String summary, String detail) {
 		FacesContext.getCurrentInstance().addMessage(
-				shortDescription,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, shortDescription,
-						longDescription));
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, MessageService
+						.getValue(propertyBundle, summary), MessageService
+						.getValue("regProp", detail)));
+	}
+
+	public static void displayFacesMessageError(String propertyBundle,
+			String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageService
+						.getValue(propertyBundle, summary), MessageService
+						.getValue("regProp", detail)));
+	}
+
+	public static void displayFacesMessageWarn(String propertyBundle,
+			String summary, String detail) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_WARN, MessageService
+						.getValue(propertyBundle, summary), MessageService
+						.getValue("regProp", detail)));
 	}
 
 }

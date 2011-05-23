@@ -13,6 +13,10 @@ public interface BaseDaoAbstract {
 
 	public void persist(Object obj);
 
+	public void remove(Object obj);
+
+	public void mergeUser(Object obj);
+
 	public EntityManager getEntityManager();
 
 }

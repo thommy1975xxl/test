@@ -12,64 +12,73 @@
 	<!-- custom validation -->
 	<validator>
 		<validator-id>EmptyFieldValidator</validator-id>
-		<validator-class>das.tickets.validator.EmptyFieldValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.EmptyFieldValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserNameLengthValidator</validator-id>
-		<validator-class>das.tickets.validator.UserNameLengthValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserNameLengthValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserPasswordLengthValidator</validator-id>
-		<validator-class>das.tickets.validator.UserPasswordLengthValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserPasswordLengthValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserEmailLengthValidator</validator-id>
-		<validator-class>das.tickets.validator.UserEmailLengthValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserEmailLengthValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserFirstNameValidator</validator-id>
-		<validator-class>das.tickets.validator.UserFirstNameLengthValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserFirstNameLengthValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserLastNameValidator</validator-id>
-		<validator-class>das.tickets.validator.UserLastNameLengthValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserLastNameLengthValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserNamePatternValidator</validator-id>
-		<validator-class>das.tickets.validator.UserNamePatternValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserNamePatternValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserPasswordPatternValidator</validator-id>
-		<validator-class>das.tickets.validator.UserPasswordPatternValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserPasswordPatternValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserEmailPatternValidator</validator-id>
-		<validator-class>das.tickets.validator.UserEmailPatternValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserEmailPatternValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserFirstNamePatternValidator</validator-id>
-		<validator-class>das.tickets.validator.UserFirstNamePatternValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserFirstNamePatternValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserLastNamePatternValidator</validator-id>
-		<validator-class>das.tickets.validator.UserLastNamePatternValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserLastNamePatternValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserPasswordConfirmationValidator</validator-id>
-		<validator-class>das.tickets.validator.UserPasswordConfirmationValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserPasswordConfirmationValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserNameUniquenessValidator</validator-id>
-		<validator-class>das.tickets.validator.UserNameUniquenessValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserNameUniquenessValidator</validator-class>
 	</validator>
 	<validator>
 		<validator-id>UserEmailUniquenessValidator</validator-id>
-		<validator-class>das.tickets.validator.UserEmailUniquenessValidator</validator-class>
+		<validator-class>das.tickets.validator.registration.UserEmailUniquenessValidator</validator-class>
 	</validator>
+
+
+
+
 	<application>
 		<resource-bundle>
 			<base-name>resources</base-name>
 			<var>msgs</var>
 		</resource-bundle>
+		<resource-bundle>
+			<base-name>registration</base-name>
+			<var>regProp</var>
+		</resource-bundle>
 	</application>
+
 </faces-config>

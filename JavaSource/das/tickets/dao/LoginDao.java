@@ -25,6 +25,14 @@ public class LoginDao implements Serializable, LoginDaoAbstract {
 		entityManager.getTransaction().commit();
 	}
 
+	@Override
+	public void remove(Object obj) {
+		entityManager.getTransaction().begin();
+		entityManager.remove(obj);
+		entityManager.getTransaction().commit();
+
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public User findUserByUserNameAndPassword(String userName, String password) {
@@ -61,8 +69,16 @@ public class LoginDao implements Serializable, LoginDaoAbstract {
 	public List<Role> findRolesByUserName(String userName) {
 		return entityManager
 				.createQuery(
-						"SELECT r FROM Role r JOIN r.userRoleJoins usj JOIN usj.user u WHERE u.userName =:userName")
+						"SELECT r FROM Role r JOIN r.users u WHERE u.userName =:userName")
 				.setParameter("userName", userName).getResultList();
+	}
+
+	@Override
+	public void mergeUser(Object obj) {
+		entityManager.getTransaction().begin();
+		entityManager.merge(obj);
+		entityManager.getTransaction().commit();
+
 	}
 
 }

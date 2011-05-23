@@ -2,8 +2,11 @@ package das.tickets.domain;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -25,11 +28,17 @@ public class User extends BaseEntity {
 
 	private String email;
 
-	@OneToMany(mappedBy = "user")
-	private Collection<UserRoleJoin> userRoleJoins;
+	private String firstName;
 
-	@OneToMany(mappedBy = "user")
-	private Collection<UserGroupJoin> userGroupJoins;
+	private String lastName;
+
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "USER_ROLE_JOIN", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
+	private Collection<Role> roles;
+
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "USER_GROUP_JOIN", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "group_id") })
+	private Collection<UserGroup> groups;
 
 	// constructors
 	public User() {
@@ -68,20 +77,36 @@ public class User extends BaseEntity {
 		this.email = email;
 	}
 
-	public Collection<UserRoleJoin> getUserRoleJoins() {
-		return userRoleJoins;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setUserRoleJoins(Collection<UserRoleJoin> userRoleJoins) {
-		this.userRoleJoins = userRoleJoins;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public Collection<UserGroupJoin> getUserGroupJoins() {
-		return userGroupJoins;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setUserGroupJoins(Collection<UserGroupJoin> userGroupJoins) {
-		this.userGroupJoins = userGroupJoins;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+
+	public Collection<UserGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Collection<UserGroup> groups) {
+		this.groups = groups;
 	}
 
 }
