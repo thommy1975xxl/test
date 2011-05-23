@@ -12,7 +12,7 @@
 	<ui:define name="pageHeader">Registration</ui:define>
 	<ui:define name="body">
 		<h:form id="registrationForm">
-			<p:panel id="registrationPanel" header="Registration - Update user"
+			<p:panel id="registrationPanel" header="#{regProp.REGISTRATION_UI_CAPTION} #{regProp.REGISTRATION_UI_CAPTION_UPDATE}"
 				style="">
 				<p:messages id="msgs" globalOnly="true" rendered="true" />
 				<c:if test="#{registrationController.userToUpdate!=null}">
