@@ -79,6 +79,10 @@
 			<base-name>registration</base-name>
 			<var>registration_properties</var>
 		</resource-bundle>
+		<resource-bundle>
+			<base-name>menu</base-name>
+			<var>menu_properties</var>
+		</resource-bundle>
 	</application>
 
 </faces-config>
