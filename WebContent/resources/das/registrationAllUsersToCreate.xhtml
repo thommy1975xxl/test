@@ -28,21 +28,6 @@
 				value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION}" />
 		</f:facet>
 
-		<p:column style="text-align:left;">
-			<f:facet name="header">
-				<h:outputText
-					value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
-			</f:facet>
-			<h:commandButton id="updateUserButton"
-				action="#{registrationController.removeUser(user.id)}"
-				rendered="#{!user.userName.equals('admin')}" immediate="true"
-				image="/resources/images/delete.png" style="margin-left:3px;"
-				onclick="confirm.show();" />
-			<p:tooltip for="updateUserButton" value="Remove user"
-				showEffect="fade" hideEffect="fade" showEffectLength="500"
-				hideEffectLength="500" />
-		</p:column>
-
 		<p:column style="text-align:left;" sortBy="#{user.userName}"
 			filterBy="#{user.userName}" filterStyle="margin-left:-20px">
 			<f:facet name="header">

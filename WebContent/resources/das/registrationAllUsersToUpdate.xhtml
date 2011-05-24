@@ -18,16 +18,20 @@
 <composite:implementation>
 	<p:dataTable id="userDataTable" var="user"
 		value="#{registrationController.allUsersByCreationDate}"
-		paginator="true" rows="10"
+		paginator="true"
+		rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="5,10,15,25,50" style="font-size:12px;">
+		rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}"
+		style="font-size:12px;">
 		<f:facet name="header">
-			<h:outputText value="User Summary" />
+			<h:outputText
+				value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION}" />
 		</f:facet>
 
-		<p:column style="text-align:left;">
+		<p:column styleClass="registration-column">
 			<f:facet name="header">
-				<h:outputText value="Action" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
 			</f:facet>
 			<h:commandButton id="updateUserButton"
 				action="#{registrationController.prepareUpdateUser(user.id)}"
@@ -40,28 +44,32 @@
 
 		<p:column style="text-align:left;" sortBy="#{user.disabled}">
 			<f:facet name="header">
-				<h:outputText value="Status" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_TABLE_STATUS}" />
 			</f:facet>
 			<h:commandButton id="disableUser"
 				action="#{registrationController.toggleUserActivity(user)}"
 				value="toggle"
 				rendered="#{!user.disabled and !user.userName.equals('admin')}"
 				image="/resources/images/ok.png" />
-			<p:tooltip for="disableUser" value="Toggle user activity" showEffect="fade"
-				hideEffect="fade" showEffectLength="500" hideEffectLength="500" />
+			<p:tooltip for="disableUser" value="Toggle user activity"
+				showEffect="fade" hideEffect="fade" showEffectLength="500"
+				hideEffectLength="500" />
 			<h:commandButton id="enableUser"
 				action="#{registrationController.toggleUserActivity(user)}"
 				value="toggle"
 				rendered="#{user.disabled and !user.userName.equals('admin')}"
 				image="/resources/images/disabled.png" />
-			<p:tooltip for="enableUser" value="Toggle user activity" showEffect="fade"
-				hideEffect="fade" showEffectLength="500" hideEffectLength="500" />
+			<p:tooltip for="enableUser" value="Toggle user activity"
+				showEffect="fade" hideEffect="fade" showEffectLength="500"
+				hideEffectLength="500" />
 		</p:column>
 
 		<p:column style="text-align:left;" sortBy="#{user.userName}"
 			filterBy="#{user.userName}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Username" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.userName}" />
 		</p:column>
@@ -69,7 +77,8 @@
 		<p:column style="text-align:left;" sortBy="#{user.firstName}"
 			filterBy="#{user.firstName}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="First Name" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.firstName}" />
 		</p:column>
@@ -77,7 +86,8 @@
 		<p:column style="text-align:left;" sortBy="#{user.lastName}"
 			filterBy="#{user.lastName}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Last Name" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.lastName}" />
 		</p:column>
@@ -85,7 +95,8 @@
 		<p:column style="text-align:left;" sortBy="#{user.email}"
 			filterBy="#{user.email}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Email" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.email}" />
 		</p:column>
@@ -93,7 +104,8 @@
 		<p:column style="text-align:left;" sortBy="#{user.createdBy}"
 			filterBy="#{user.createdBy}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Created By" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.createdBy}" />
 		</p:column>
@@ -101,17 +113,20 @@
 		<p:column style="text-align:left;" sortBy="#{user.createdOn}"
 			filterBy="#{user.createdOn}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Created On" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.createdOn}">
-				<f:convertDateTime pattern="yyyy-MM-dd" />
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
 			</h:outputText>
 		</p:column>
 
 		<p:column style="text-align:left;" sortBy="#{user.modifiedBy}"
 			filterBy="#{user.modifiedBy}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Modified By" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDBY_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.modifiedBy}" />
 		</p:column>
@@ -119,10 +134,12 @@
 		<p:column style="text-align:left;" sortBy="#{user.modifiedOn}"
 			filterBy="#{user.modifiedOn}" filterStyle="margin-left:-20px">
 			<f:facet name="header">
-				<h:outputText value="Modified On" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDON_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.modifiedOn}">
-				<f:convertDateTime pattern="yyyy-MM-dd" />
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
 			</h:outputText>
 		</p:column>
 	</p:dataTable>

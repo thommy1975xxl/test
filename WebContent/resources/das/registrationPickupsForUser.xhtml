@@ -21,8 +21,12 @@
 	<h:panelGrid columns="2">
 		<p:outputPanel>
 			<h:panelGrid columns="3" style="font-size:12px;">
-				<h:outputText value="*" style="position:relative;top:-90px;" />
-				<h:outputText value="Roles:" style="position:relative;top:-90px;" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+					style="position:relative;top:-90px;" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_ROLE_LABEL}"
+					style="position:relative;top:-90px;" />
 				<p:pickList id="userRolesSelect"
 					value="#{registrationController.roleDefinitions}" var="role"
 					itemLabel="#{role}" itemValue="#{role}" style="height:30px;">
@@ -36,8 +40,12 @@
 		</p:outputPanel>
 		<p:outputPanel>
 			<h:panelGrid columns="3" style="font-size:12px;">
-				<h:outputText value="*" style="position:relative;top:-90px;" />
-				<h:outputText value="Groups:" style="position:relative;top:-90px;" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+					style="position:relative;top:-90px;" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_GROUP_LABEL}"
+					style="position:relative;top:-90px;" />
 				<p:pickList id="userGroupesSelect"
 					value="#{registrationController.groupDefinitions}" var="group"
 					itemLabel="#{group}" itemValue="#{group}" style="height:30px;">
@@ -57,8 +65,12 @@
 			value="BACK" ajax="false">
 		</p:commandButton>
 		<h:panelGrid columns="2">
-			<h:outputText value="*" style="font-size:10px;" />
-			<h:outputText value="required field" style="font-size:10px;" />
+			<h:outputText
+				value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+				style="font-size:10px;" />
+			<h:outputText
+				value="#{registration_properties.REGISTRATION_UI_REQUIRED_LABEL}"
+				style="font-size:10px;" />
 		</h:panelGrid>
 	</h:panelGrid>
 	<hr />

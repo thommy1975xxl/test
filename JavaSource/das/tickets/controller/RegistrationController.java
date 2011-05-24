@@ -158,7 +158,7 @@ public class RegistrationController {
 			newUser.setGroups(userGroups);
 
 			registrationDao.persist(newUser);
-			MessageService.displayFacesMessageInfo("regProp",
+			MessageService.displayFacesMessageInfo("registration_properties",
 					"REGISTRATION_SUCCESS_SUMMARY",
 					"REGISTRATION_SUCCESS_DETAIL");
 		}
@@ -228,7 +228,7 @@ public class RegistrationController {
 		User modifiedByUser = (User) SessionService.getSessionAttribute("user");
 		userToUpdate.setModifiedBy(modifiedByUser.getUserName());
 		registrationDao.mergeUser(userToUpdate);
-		MessageService.displayFacesMessageInfo("regProp",
+		MessageService.displayFacesMessageInfo("registration_properties",
 				"REGISTRATION_USER_UPDATED_SUMMARY",
 				"REGISTRATION_USER_UPDATED_DETAIL");
 		return UPDATE_PATH;
@@ -243,11 +243,11 @@ public class RegistrationController {
 		registrationDao.mergeUser(userToUpdate);
 		userToUpdate = null;
 		if (user.getDisabled()) {
-			MessageService.displayFacesMessageInfo("regProp",
+			MessageService.displayFacesMessageInfo("registration_properties",
 					"REGISTRATION_USER_DISABLED_SUMMARY",
 					"REGISTRATION_USER_DISABLED_DETAIL");
 		} else {
-			MessageService.displayFacesMessageInfo("regProp",
+			MessageService.displayFacesMessageInfo("registration_properties",
 					"REGISTRATION_USER_ENABLED_SUMMARY",
 					"REGISTRATION_USER_ENABLED_DETAIL");
 		}
@@ -258,7 +258,7 @@ public class RegistrationController {
 		// remove user
 		userToRemove = registrationDao.getEntityManager().find(User.class, id);
 		registrationDao.remove(userToRemove);
-		MessageService.displayFacesMessageInfo("regProp",
+		MessageService.displayFacesMessageInfo("registration_properties",
 				"REGISTRATION_REMOVED_SUMMARY", "REGISTRATION_REMOVED_DETAIL");
 		allUsersByCreationDate = registrationDao
 				.findAllUsersByRegistrationDate();

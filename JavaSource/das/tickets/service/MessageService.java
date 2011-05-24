@@ -36,7 +36,7 @@ public class MessageService {
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, MessageService
 						.getValue(propertyBundle, summary), MessageService
-						.getValue("regProp", detail)));
+						.getValue(propertyBundle, detail)));
 	}
 
 	public static void displayFacesMessageError(String propertyBundle,
@@ -45,7 +45,7 @@ public class MessageService {
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageService
 						.getValue(propertyBundle, summary), MessageService
-						.getValue("regProp", detail)));
+						.getValue(propertyBundle, detail)));
 	}
 
 	public static void displayFacesMessageWarn(String propertyBundle,
@@ -54,7 +54,7 @@ public class MessageService {
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_WARN, MessageService
 						.getValue(propertyBundle, summary), MessageService
-						.getValue("regProp", detail)));
+						.getValue(propertyBundle, detail)));
 	}
 
 }

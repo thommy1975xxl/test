@@ -18,16 +18,18 @@
 <composite:implementation>
 	<p:dataTable id="userDataTable" var="user"
 		value="#{registrationController.userListToUpdate}" paginator="true"
-		rows="10"
+		rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="5,10,15,25,50" style="font-size:12px;">
+		rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}" style="font-size:12px;">
 		<f:facet name="header">
-			<h:outputText value="User Summary" />
+			<h:outputText
+				value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION_SELECTED_USER}" />
 		</f:facet>
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Action" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
 			</f:facet>
 			<p:commandButton id="registrationUpdateButton"
 				action="#{registrationController.updateUser(user)}" value="UPDATE"
@@ -36,7 +38,8 @@
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Username" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
 			</f:facet>
 			<h:inputText id="userNameUpdated" value="#{user.userName}">
 				<f:validator
@@ -51,7 +54,8 @@
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="First Name" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
 			</f:facet>
 			<h:inputText id="userFirstNameUpdated" value="#{user.firstName}">
 				<f:validator
@@ -66,7 +70,8 @@
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Last Name" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
 			</f:facet>
 			<h:inputText id="userLastNameUpdated" value="#{user.lastName}">
 				<f:validator
@@ -81,7 +86,8 @@
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Email" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
 			</f:facet>
 			<h:inputText id="userEmailUpdated" value="#{user.email}">
 				<f:validator
@@ -91,13 +97,13 @@
 				<f:validator
 					validatorId="das.tickets.validator.registration.UserEmailPatternValidator" />
 			</h:inputText>
-
 			<p:message for="userEmailUpdated" />
 		</p:column>
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Created By" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.createdBy}" />
 		</p:column>
@@ -107,13 +113,15 @@
 				<h:outputText value="Created On" />
 			</f:facet>
 			<h:outputText value="#{user.createdOn}">
-				<f:convertDateTime pattern="yyyy-MM-dd" />
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
 			</h:outputText>
 		</p:column>
 
 		<p:column style="text-align:left;">
 			<f:facet name="header">
-				<h:outputText value="Modified By" />
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
 			</f:facet>
 			<h:outputText value="#{user.modifiedBy}" />
 		</p:column>
@@ -123,7 +131,8 @@
 				<h:outputText value="Modified On" />
 			</f:facet>
 			<h:outputText value="#{user.modifiedOn}">
-				<f:convertDateTime pattern="yyyy-MM-dd" />
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
 			</h:outputText>
 		</p:column>
 	</p:dataTable>

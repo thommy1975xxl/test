@@ -77,7 +77,7 @@
 		</resource-bundle>
 		<resource-bundle>
 			<base-name>registration</base-name>
-			<var>regProp</var>
+			<var>registration_properties</var>
 		</resource-bundle>
 	</application>
 
