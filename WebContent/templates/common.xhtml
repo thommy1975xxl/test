@@ -49,10 +49,7 @@
 }
 </style>
 	<script type="text/javascript">
-function testFunction()
-{ 
-	alert(document.getElementById("hiddenUserId"));
-}
+
 </script>
 </h:head>
 <h:body>
@@ -60,15 +57,20 @@ function testFunction()
 		<p:menubar id="mainMenu" autoSubmenuDisplay="true" rendered="true"
 			styleClass="mainMenu">
 			<p:menuitem value="Home" url="/pages/welcome.jsf" />
-			<p:submenu label="Administration"
+			<p:submenu label="#{menu_properties.MENU_ADMINISTRATION_TOP}"
 				rendered="#{loginController.hasAdministratorRole}">
-				<p:submenu label="Account" icon="user-icon">
-					<p:menuitem value="Create"
+				<p:submenu
+					label="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT}"
+					icon="user-icon">
+					<p:menuitem
+						value="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT_CREATE}"
 						url="/pages/administration/registration/new.jsf" icon="new-icon" />
-					<p:menuitem value="Update"
+					<p:menuitem
+						value="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT_UPDATE}"
 						url="/pages/administration/registration/update.jsf"
 						icon="update-icon" />
-					<p:menuitem value="Remove"
+					<p:menuitem
+						value="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT_REMOVE}"
 						url="/pages/administration/registration/remove.jsf"
 						icon="delete-icon" />
 				</p:submenu>
