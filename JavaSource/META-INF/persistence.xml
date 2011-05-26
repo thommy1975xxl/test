@@ -6,12 +6,10 @@
 	<persistence-unit name="dasTicketsPU">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<!-- <jta-data-source>java:/DasTicketsDS</jta-data-source> -->
-		<!-- mapped classes -->
+		<!-- mapped classes 	-->
 		<class>das.tickets.domain.User</class>
 		<class>das.tickets.domain.Role</class>
-		<class>das.tickets.domain.UserRoleJoin</class>
 		<class>das.tickets.domain.UserGroup</class>
-		<class>das.tickets.domain.UserGroupJoin</class>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />

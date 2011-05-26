@@ -1,6 +1,7 @@
 package das.tickets.domain;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -22,6 +23,12 @@ public class UserGroup extends BaseEntity {
 
 	// constructors
 	public UserGroup() {
+	}
+
+	public UserGroup(String groupName, String createdBy, Date createdOn) {
+		this.groupName = groupName;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
 	}
 
 	// getter & setter

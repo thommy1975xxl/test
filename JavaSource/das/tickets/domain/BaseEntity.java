@@ -28,11 +28,11 @@ public class BaseEntity implements Serializable {
 
 	@NotNull
 	@Size(min = 5, max = 30)
-	private String createdBy;
+	protected String createdBy;
 
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdOn;
+	protected Date createdOn;
 
 	@Size(min = 5, max = 30)
 	private String modifiedBy;

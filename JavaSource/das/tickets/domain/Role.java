@@ -1,6 +1,7 @@
 package das.tickets.domain;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -22,6 +23,12 @@ public class Role extends BaseEntity {
 
 	// constructors
 	public Role() {
+	}
+
+	public Role(String roleName, String createdBy, Date createdOn) {
+		this.roleName = roleName;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
 	}
 
 	// getter & setter

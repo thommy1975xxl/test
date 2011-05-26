@@ -1,9 +1,9 @@
 package das.tickets.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -12,10 +12,6 @@ import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.DualListModel;
 
-import das.tickets.config.GroupDefinition;
-import das.tickets.config.GroupDefinition.GroupName;
-import das.tickets.config.RoleDefinition;
-import das.tickets.config.RoleDefinition.RoleName;
 import das.tickets.dao.RegistrationDao;
 import das.tickets.domain.Role;
 import das.tickets.domain.User;
@@ -74,40 +70,9 @@ public class RegistrationController {
 	public RegistrationController() {
 
 		// Roles
-		List<String> sourceRole = new ArrayList<String>();
-		targetRole = new ArrayList<String>();
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		sourceRole.add(RoleDefinition.RoleName.ASSIGNEE.toString());
-		sourceRole.add(RoleDefinition.RoleName.MANAGER.toString());
-		sourceRole.add(RoleDefinition.RoleName.REPORTER.toString());
-		sourceRole.add(RoleDefinition.RoleName.VISITOR.toString());
-		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
+		initBasicRoles();
 		// Groups
-		List<String> sourceGroup = new ArrayList<String>();
-		targetGroup = new ArrayList<String>();
-		sourceGroup.add(GroupDefinition.GroupName.DEVELOPMENT.toString());
-		sourceGroup.add(GroupDefinition.GroupName.MARKETING.toString());
-		sourceGroup.add(GroupDefinition.GroupName.QA.toString());
-		sourceGroup.add(GroupDefinition.GroupName.SUPPORT.toString());
+		List<String> sourceGroup = initBasicGroups();
 		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
 		// all users
 		allUsersByCreationDate = registrationDao
@@ -132,31 +97,21 @@ public class RegistrationController {
 			newUser.setUserName(userName);
 			newUser.setFirstName(firstName);
 			newUser.setLastName(lastName);
-
 			// roles
 			Set<Role> userRoles = new HashSet<Role>();
 			for (String newRole : roleDefinitions.getTarget()) {
-				Role role = new Role();
-				role.setCreatedBy(createdBy);
-				role.setCreatedOn(createdOn);
-				role.setRoleName(newRole);
-				registrationDao.persist(role);
+				Role role = registrationDao.findRoleByRoleName(newRole);
 				userRoles.add(role);
 			}
 			newUser.setRoles(userRoles);
-
 			// groups
 			Set<UserGroup> userGroups = new HashSet<UserGroup>();
 			for (String newGroup : groupDefinitions.getTarget()) {
-				UserGroup userGroup = new UserGroup();
-				userGroup.setCreatedBy(createdBy);
-				userGroup.setCreatedOn(createdOn);
-				userGroup.setGroupName(newGroup);
-				registrationDao.persist(userGroup);
+				UserGroup userGroup = registrationDao
+						.findGroupByGroupName(newGroup);
 				userGroups.add(userGroup);
 			}
 			newUser.setGroups(userGroups);
-
 			registrationDao.persist(newUser);
 			MessageService.displayFacesMessageInfo("registration_properties",
 					"REGISTRATION_SUCCESS_SUMMARY",
@@ -167,7 +122,6 @@ public class RegistrationController {
 		return "/pages/administration/registration/new.jsf";
 	}
 
-	@SuppressWarnings("rawtypes")
 	public String prepareUpdateUser(Long id) {
 		userListToUpdate.clear();
 		userToUpdate = registrationDao.getEntityManager().find(User.class, id);
@@ -181,17 +135,10 @@ public class RegistrationController {
 		for (Role role : registrationDao.findRolesByUser(userToUpdate)) {
 			targetRole.add(role.getRoleName());
 		}
-		// role-enum to source roles
-		for (RoleName roleName : RoleDefinition.RoleName.values()) {
-			sourceRole.add(roleName.toString());
-		}
-		// remove found target roles from source roles
-		Iterator sourceRoleIterator = sourceRole.iterator();
-		while (sourceRoleIterator.hasNext()) {
-			for (String readTargetRole : targetRole) {
-				if (readTargetRole.equals(sourceRoleIterator.next())) {
-					sourceRoleIterator.remove();
-				}
+		for (Role role : registrationDao
+				.findNotAssignedRolesByUser(userToUpdate)) {
+			if (!role.getRoleName().toLowerCase().equals("administrator")) {
+				sourceRole.add(role.getRoleName());
 			}
 		}
 		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
@@ -202,23 +149,18 @@ public class RegistrationController {
 				.findGroupsByUser(userToUpdate)) {
 			targetGroup.add(userGroup.getGroupName());
 		}
-		// group-enum to source roles
-		for (GroupName groupName : GroupDefinition.GroupName.values()) {
-			sourceGroup.add(groupName.toString());
-		}
-		// remove found target groups from source groups
-		Iterator sourceGroupIterator = sourceGroup.iterator();
-		while (sourceGroupIterator.hasNext()) {
-			for (String readTargetGroup : targetGroup) {
-				if (readTargetGroup.equals(sourceGroupIterator.next())) {
-					sourceGroupIterator.remove();
-				}
-			}
+		for (UserGroup group : registrationDao
+				.findNotAssignedUserGroupsByUser(userToUpdate)) {
+			sourceGroup.add(group.getGroupName());
 		}
 		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
 		userListToUpdate.add(userToUpdate);
 		allUsersByCreationDate = registrationDao
 				.findAllUsersByRegistrationDate();
+		Collections.sort(targetRole);
+		Collections.sort(sourceRole);
+		Collections.sort(targetGroup);
+		Collections.sort(sourceGroup);
 		return UPDATE_PATH;
 	}
 
@@ -227,7 +169,36 @@ public class RegistrationController {
 		userToUpdate.setModifiedOn(new Date());
 		User modifiedByUser = (User) SessionService.getSessionAttribute("user");
 		userToUpdate.setModifiedBy(modifiedByUser.getUserName());
+		// roles
+		Set<Role> userRoles = new HashSet<Role>(userToUpdate.getRoles());
+		for (String newRole : roleDefinitions.getSource()) {
+			Role role = registrationDao.findRoleByRoleName(newRole);
+			userRoles.remove(role);
+		}
+		for (String newRole : roleDefinitions.getTarget()) {
+			Role role = registrationDao.findRoleByRoleName(newRole);
+			userRoles.add(role);
+		}
+		userToUpdate.setRoles(userRoles);
+		// groups
+		Set<UserGroup> userGroups = new HashSet<UserGroup>(
+				userToUpdate.getGroups());
+		for (String newGroup : groupDefinitions.getSource()) {
+			UserGroup userGroup = registrationDao
+					.findGroupByGroupName(newGroup);
+			userGroups.remove(userGroup);
+		}
+		for (String newGroup : groupDefinitions.getTarget()) {
+			UserGroup userGroup = registrationDao
+					.findGroupByGroupName(newGroup);
+			userGroups.add(userGroup);
+		}
+		userToUpdate.setGroups(userGroups);
 		registrationDao.mergeUser(userToUpdate);
+		Collections.sort(targetRole);
+		Collections.sort(sourceRole);
+		Collections.sort(targetGroup);
+		Collections.sort(sourceGroup);
 		MessageService.displayFacesMessageInfo("registration_properties",
 				"REGISTRATION_USER_UPDATED_SUMMARY",
 				"REGISTRATION_USER_UPDATED_DETAIL");
@@ -271,6 +242,31 @@ public class RegistrationController {
 			userToUpdate = null;
 		}
 		return UPDATE_PATH;
+	}
+
+	// private functions
+	private List<String> initBasicGroups() {
+		List<String> sourceGroup = new ArrayList<String>();
+		targetGroup = new ArrayList<String>();
+		List<UserGroup> availableGroups = registrationDao.findAllGroups();
+		for (UserGroup group : availableGroups) {
+			sourceGroup.add(group.getGroupName());
+		}
+		Collections.sort(sourceGroup);
+		return sourceGroup;
+	}
+
+	private void initBasicRoles() {
+		List<String> sourceRole = new ArrayList<String>();
+		targetRole = new ArrayList<String>();
+		List<Role> availableRoles = registrationDao.findAllRoles();
+		for (Role role : availableRoles) {
+			if (!role.getRoleName().toLowerCase().equals("administrator")) {
+				sourceRole.add(role.getRoleName());
+			}
+		}
+		Collections.sort(sourceRole);
+		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
 	}
 
 	// getter & setter

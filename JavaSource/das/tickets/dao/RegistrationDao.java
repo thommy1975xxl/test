@@ -96,4 +96,70 @@ public class RegistrationDao implements RegistrationDaoAbstract {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean findRoleForUser(String roleName, User user) {
+		List<Role> roles = entityManager
+				.createQuery(
+						"SELECT r FROM Role r JOIN r.users u WHERE r.roleName =:roleName AND u =:user")
+				.setParameter("roleName", roleName).setParameter("user", user)
+				.getResultList();
+		if (!roles.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> findAllRoles() {
+		return entityManager.createQuery(
+				"SELECT DISTINCT r FROM Role r ORDER BY r.roleName ASC")
+				.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Role findRoleByRoleName(String roleName) {
+		List<Role> roles = entityManager
+				.createQuery(
+						"SELECT DISTINCT r FROM Role r WHERE r.roleName =:roleName")
+				.setParameter("roleName", roleName).getResultList();
+		if (!roles.isEmpty()) {
+			return roles.get(0);
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public UserGroup findGroupByGroupName(String groupName) {
+		List<UserGroup> groups = entityManager
+				.createQuery(
+						"SELECT DISTINCT g FROM UserGroup g WHERE g.groupName =:groupName")
+				.setParameter("groupName", groupName).getResultList();
+		if (!groups.isEmpty()) {
+			return groups.get(0);
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> findNotAssignedRolesByUser(User user) {
+		return entityManager
+				.createQuery(
+						"SELECT DISTINCT r FROM Role r WHERE r NOT IN(SELECT DISTINCT r FROM Role r JOIN r.users u WHERE u =:user)")
+				.setParameter("user", user).getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserGroup> findNotAssignedUserGroupsByUser(User user) {
+		return entityManager
+				.createQuery(
+						"SELECT DISTINCT g FROM UserGroup g WHERE g NOT IN(SELECT DISTINCT g FROM UserGroup g JOIN g.users u WHERE u =:user)")
+				.setParameter("user", user).getResultList();
+	}
+
 }
