@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="primefaces_icons.css" />
+	<h:outputStylesheet library="css" name="custom.css" />
+</h:head>
+<h:body>
+	<p:dataTable id="userDataTable" var="user"
+		value="#{registrationController.allUsersByCreationDate}"
+		paginator="true"
+		rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
+		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}"
+		style="font-size:12px;">
+		<f:facet name="header">
+			<h:outputText
+				value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION}" />
+		</f:facet>
+
+		<p:column style="text-align:left;" sortBy="#{user.userName}"
+			filterBy="#{user.userName}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.userName}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.firstName}"
+			filterBy="#{user.firstName}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.firstName}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.lastName}"
+			filterBy="#{user.lastName}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.lastName}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.email}"
+			filterBy="#{user.email}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.email}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.createdBy}"
+			filterBy="#{user.createdBy}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.createdBy}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.createdOn}"
+			filterBy="#{user.createdOn}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.createdOn}">
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+			</h:outputText>
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.modifiedBy}"
+			filterBy="#{user.modifiedBy}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDBY_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.modifiedBy}" />
+		</p:column>
+
+		<p:column style="text-align:left;" sortBy="#{user.modifiedOn}"
+			filterBy="#{user.modifiedOn}" filterStyle="margin-left:-20px">
+			<f:facet name="header">
+				<h:outputText
+					value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDON_LABEL}" />
+			</f:facet>
+			<h:outputText value="#{user.modifiedOn}">
+				<f:convertDateTime
+					pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+</h:body>
+</html>

@@ -1,0 +1,34 @@
+.loginDialog {
+	font-size: 12px;
+}
+
+.mainMenu {
+	font-size: 12px;
+}
+
+.popUp {
+	font-size: 12px;
+}
+
+.pf-picklist-source,.pf-picklist-target {
+	width: 305px;
+	height: 30px;
+}
+
+#userRegistrationTextFields {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
+
+#userRegistrationRolesSelect {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
+
+#userRegistrationGroupsSelect {
+	vertical-align: top;
+	position: relative;
+	left: -100px;
+}
