@@ -37,9 +37,19 @@
 						url="/pages/administration/registration/remove.jsf"
 						icon="delete-icon" />
 				</p:submenu>
+				<p:submenu label="Role" icon="role-icon">
+					<p:menuitem value="new" url="/pages/administration/role/new.jsf"
+						icon="new-icon" />
+					<p:menuitem value="update"
+						url="/pages/administration/role/update.jsf" icon="update-icon" />
+					<p:menuitem value="remove"
+						url="/pages/administration/role/remove.jsf" icon="delete-icon" />
+				</p:submenu>
+				<!-- 
 				<p:menuitem value="Accounts" icon="user-icon"
 					url="/pages/administration/registration.jsf?um=0">
 				</p:menuitem>
+				 -->
 			</p:submenu>
 			<p:menuitem value="Logout" action="#{loginController.logout}"
 				rendered="#{sessionScope.user.userName != null}" />
