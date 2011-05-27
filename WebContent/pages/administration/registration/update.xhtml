@@ -12,17 +12,320 @@
 	<ui:define name="pageHeader">Registration</ui:define>
 	<ui:define name="body">
 		<h:form id="registrationForm">
-			<p:panel id="registrationPanel" header="#{registration_properties.REGISTRATION_UI_CAPTION} #{registration_properties.REGISTRATION_UI_CAPTION_UPDATE}"
+			<p:panel id="registrationPanel"
+				header="#{registration_properties.REGISTRATION_UI_CAPTION} #{registration_properties.REGISTRATION_UI_CAPTION_UPDATE}"
 				style="">
 				<p:messages id="msgs" globalOnly="true" rendered="true" />
 				<c:if test="#{registrationController.userToUpdate!=null}">
-					<das:registrationPickupsForUser />
+					<h:panelGrid columns="2">
+						<p:outputPanel>
+							<h:panelGrid columns="3" style="font-size:12px;">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+									style="position:relative;top:-90px;" />
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_ROLE_LABEL}"
+									style="position:relative;top:-90px;" />
+								<p:pickList id="userRolesSelect"
+									value="#{registrationController.roleDefinitions}" var="role"
+									itemLabel="#{role}" itemValue="#{role}" style="height:30px;">
+									<f:validator
+										validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								</p:pickList>
+								<h:outputText value="" />
+								<h:outputText value="" />
+								<p:message for="userRolesSelect" />
+							</h:panelGrid>
+						</p:outputPanel>
+						<p:outputPanel>
+							<h:panelGrid columns="3" style="font-size:12px;">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+									style="position:relative;top:-90px;" />
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_GROUP_LABEL}"
+									style="position:relative;top:-90px;" />
+								<p:pickList id="userGroupesSelect"
+									value="#{registrationController.groupDefinitions}" var="group"
+									itemLabel="#{group}" itemValue="#{group}" style="height:30px;">
+									<f:validator
+										validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								</p:pickList>
+								<h:outputText value="" />
+								<h:outputText value="" />
+								<p:message for="userGroupesSelect" />
+							</h:panelGrid>
+						</p:outputPanel>
+					</h:panelGrid>
+					<hr />
+					<h:panelGrid style="font-size:12px;" columns="2">
+						<p:commandButton id="registrationButton" immediate="true"
+							action="#{registrationController.toggleRegistrationMode}"
+							value="SHOW ALL REGISTRATED USERS" ajax="false">
+						</p:commandButton>
+						<h:panelGrid columns="2">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_REQUIRED_SIGN}"
+								style="font-size:10px;" />
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_REQUIRED_LABEL}"
+								style="font-size:10px;" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<hr />
 				</c:if>
 				<c:if test="#{registrationController.userToUpdate==null}">
-					<das:registrationAllUsersToUpdate />
+					<p:dataTable id="userDataTable" var="user"
+						value="#{registrationController.allUsersByCreationDate}"
+						paginator="true"
+						rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}"
+						style="font-size:12px;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION}" />
+						</f:facet>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
+							</f:facet>
+							<h:commandButton id="updateUserButton"
+								action="#{registrationController.prepareUpdateUser(user.id)}"
+								rendered="#{!user.userName.equals('admin')}" immediate="true"
+								image="/resources/images/update.png" style="margin-left:3px;" />
+							<p:tooltip for="updateUserButton" value="Update user"
+								showEffect="fade" hideEffect="fade" showEffectLength="500"
+								hideEffectLength="500" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.disabled}">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_TABLE_STATUS}" />
+							</f:facet>
+							<h:commandButton id="disableUser"
+								action="#{registrationController.toggleUserActivity(user)}"
+								value="toggle"
+								rendered="#{!user.disabled and !user.userName.equals('admin')}"
+								image="/resources/images/ok.png" />
+							<p:tooltip for="disableUser" value="Toggle user activity"
+								showEffect="fade" hideEffect="fade" showEffectLength="500"
+								hideEffectLength="500" />
+							<h:commandButton id="enableUser"
+								action="#{registrationController.toggleUserActivity(user)}"
+								value="toggle"
+								rendered="#{user.disabled and !user.userName.equals('admin')}"
+								image="/resources/images/disabled.png" />
+							<p:tooltip for="enableUser" value="Toggle user activity"
+								showEffect="fade" hideEffect="fade" showEffectLength="500"
+								hideEffectLength="500" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.userName}"
+							filterBy="#{user.userName}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.userName}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.firstName}"
+							filterBy="#{user.firstName}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.firstName}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.lastName}"
+							filterBy="#{user.lastName}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.lastName}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.email}"
+							filterBy="#{user.email}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.email}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.createdBy}"
+							filterBy="#{user.createdBy}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.createdBy}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.createdOn}"
+							filterBy="#{user.createdOn}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.createdOn}">
+								<f:convertDateTime
+									pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.modifiedBy}"
+							filterBy="#{user.modifiedBy}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDBY_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.modifiedBy}" />
+						</p:column>
+
+						<p:column style="text-align:left;" sortBy="#{user.modifiedOn}"
+							filterBy="#{user.modifiedOn}" filterStyle="margin-left:-20px">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDON_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.modifiedOn}">
+								<f:convertDateTime
+									pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
 				</c:if>
 				<c:if test="#{registrationController.userToUpdate!=null}">
-					<das:registrationSelectedUserToUpdate />
+					<p:dataTable id="userDataTable" var="user"
+						value="#{registrationController.userListToUpdate}"
+						paginator="true"
+						rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}"
+						style="font-size:12px;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION_SELECTED_USER}" />
+						</f:facet>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
+							</f:facet>
+							<p:commandButton id="registrationUpdateButton"
+								action="#{registrationController.updateUser(user)}"
+								value="UPDATE" ajax="false" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
+							</f:facet>
+							<h:inputText id="userNameUpdated" value="#{user.userName}">
+								<f:validator
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserNamePatternValidator" />
+							</h:inputText>
+							<p:message for="userNameUpdated" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
+							</f:facet>
+							<h:inputText id="userFirstNameUpdated" value="#{user.firstName}">
+								<f:validator
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserFirstNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserFirstNamePatternValidator" />
+							</h:inputText>
+							<p:message for="userFirstNameUpdated" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
+							</f:facet>
+							<h:inputText id="userLastNameUpdated" value="#{user.lastName}">
+								<f:validator
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserLastNameLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserLastNamePatternValidator" />
+							</h:inputText>
+							<p:message for="userLastNameUpdated" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
+							</f:facet>
+							<h:inputText id="userEmailUpdated" value="#{user.email}">
+								<f:validator
+									validatorId="das.tickets.validator.registration.EmptyFieldValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserEmailLengthValidator" />
+								<f:validator
+									validatorId="das.tickets.validator.registration.UserEmailPatternValidator" />
+							</h:inputText>
+							<p:message for="userEmailUpdated" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.createdBy}" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Created On" />
+							</f:facet>
+							<h:outputText value="#{user.createdOn}">
+								<f:convertDateTime
+									pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText
+									value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
+							</f:facet>
+							<h:outputText value="#{user.modifiedBy}" />
+						</p:column>
+
+						<p:column style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Modified On" />
+							</f:facet>
+							<h:outputText value="#{user.modifiedOn}">
+								<f:convertDateTime
+									pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
 				</c:if>
 			</p:panel>
 		</h:form>

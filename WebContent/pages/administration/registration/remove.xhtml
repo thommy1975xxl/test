@@ -12,10 +12,115 @@
 	<ui:define name="pageHeader">Registration</ui:define>
 	<ui:define name="body">
 		<h:form id="registrationForm">
-			<p:panel id="registrationPanel" header="#{registration_properties.REGISTRATION_UI_CAPTION} #{registration_properties.REGISTRATION_UI_CAPTION_REMOVE}"
+			<p:panel id="registrationPanel"
+				header="#{registration_properties.REGISTRATION_UI_CAPTION} #{registration_properties.REGISTRATION_UI_CAPTION_REMOVE}"
 				style="">
 				<p:messages id="msgs" globalOnly="true" rendered="true" />
-				<das:registrationAllUsersToRemove />
+				<p:dataTable id="userDataTable" var="user"
+					value="#{registrationController.allUsersByCreationDate}"
+					paginator="true"
+					rows="#{registration_properties.REGISTRATION_UI_USER_TABLE_MAX_ROWS}"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="#{registration_properties.REGISTRATION_UI_USER_TABLE_PAGINATION_STEPS}"
+					style="font-size:12px;">
+					<f:facet name="header">
+						<h:outputText
+							value="#{registration_properties.REGISTRATION_UI_USER_TABLE_CAPTION}" />
+					</f:facet>
+
+					<p:column style="text-align:left;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_TABLE_ACTION}" />
+						</f:facet>
+						<h:commandButton id="updateUserButton"
+							action="#{registrationController.removeUser(user.id)}"
+							rendered="#{!user.userName.equals('admin')}" immediate="true"
+							image="/resources/images/delete.png" style="margin-left:3px;"
+							onclick="confirm.show();" />
+						<p:tooltip for="updateUserButton" value="Remove user"
+							showEffect="fade" hideEffect="fade" showEffectLength="500"
+							hideEffectLength="500" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.userName}"
+						filterBy="#{user.userName}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USERNAME_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.userName}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.firstName}"
+						filterBy="#{user.firstName}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_FIRSTNAME_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.firstName}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.lastName}"
+						filterBy="#{user.lastName}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_LASTNAME_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.lastName}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.email}"
+						filterBy="#{user.email}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_EMAIL_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.email}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.createdBy}"
+						filterBy="#{user.createdBy}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_CREATEDBY_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.createdBy}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.createdOn}"
+						filterBy="#{user.createdOn}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_CREATEDON_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.createdOn}">
+							<f:convertDateTime
+								pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.modifiedBy}"
+						filterBy="#{user.modifiedBy}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDBY_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.modifiedBy}" />
+					</p:column>
+
+					<p:column style="text-align:left;" sortBy="#{user.modifiedOn}"
+						filterBy="#{user.modifiedOn}" filterStyle="margin-left:-20px">
+						<f:facet name="header">
+							<h:outputText
+								value="#{registration_properties.REGISTRATION_UI_USER_MODIFIEDON_LABEL}" />
+						</f:facet>
+						<h:outputText value="#{user.modifiedOn}">
+							<f:convertDateTime
+								pattern="#{registration_properties.REGISTRATION_UI_USER_TABLE_DATE_PATTERN}" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
 			</p:panel>
 		</h:form>
 	</ui:define>
