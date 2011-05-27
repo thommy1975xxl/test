@@ -14,6 +14,14 @@
 	
 }
 
+.group-icon {
+	width: 16px;
+	height: 16px;
+	margin-right:5px;
+	background: url(#{resource['images/group.png']}) !important;
+	
+}
+
 .delete-icon {
 	width: 16px;
 	height: 16px;
