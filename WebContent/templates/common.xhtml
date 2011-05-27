@@ -30,7 +30,8 @@
 					<p:menuitem
 						value="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT_UPDATE}"
 						url="/pages/administration/registration/update.jsf"
-						icon="update-icon" />
+						icon="update-icon"
+						rendered="#{registrationController.userToUpdate==null}" />
 					<p:menuitem
 						value="#{menu_properties.MENU_ADMINISTRATION_SUB_ACCOUNT_REMOVE}"
 						url="/pages/administration/registration/remove.jsf"

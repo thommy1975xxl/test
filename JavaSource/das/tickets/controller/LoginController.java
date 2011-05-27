@@ -53,7 +53,7 @@ public class LoginController {
 	public void logout() throws IOException {
 		SessionService.removeAllSessionAttributes();
 		FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("./welcome.jsf");
+				.redirect("/pages/welcome.jsf");
 	}
 
 	// getter & setter

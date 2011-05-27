@@ -60,7 +60,7 @@ public class RegistrationController {
 
 	private List<User> allUsersByCreationDate;
 
-	private List<User> userListToUpdate = new ArrayList<User>();
+	private List<User> userListToUpdate;
 
 	private User userToRemove;
 
@@ -72,8 +72,7 @@ public class RegistrationController {
 		// Roles
 		initBasicRoles();
 		// Groups
-		List<String> sourceGroup = initBasicGroups();
-		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
+		initBasicGroups();
 		// all users
 		allUsersByCreationDate = registrationDao
 				.findAllUsersByRegistrationDate();
@@ -113,6 +112,7 @@ public class RegistrationController {
 			}
 			newUser.setGroups(userGroups);
 			registrationDao.persist(newUser);
+			resetFields();
 			MessageService.displayFacesMessageInfo("registration_properties",
 					"REGISTRATION_SUCCESS_SUMMARY",
 					"REGISTRATION_SUCCESS_DETAIL");
@@ -123,7 +123,7 @@ public class RegistrationController {
 	}
 
 	public String prepareUpdateUser(Long id) {
-		userListToUpdate.clear();
+		userListToUpdate = new ArrayList<User>();
 		userToUpdate = registrationDao.getEntityManager().find(User.class, id);
 		userName = userToUpdate.getUserName();
 		firstName = userToUpdate.getFirstName();
@@ -199,6 +199,7 @@ public class RegistrationController {
 		Collections.sort(sourceRole);
 		Collections.sort(targetGroup);
 		Collections.sort(sourceGroup);
+		resetFields();
 		MessageService.displayFacesMessageInfo("registration_properties",
 				"REGISTRATION_USER_UPDATED_SUMMARY",
 				"REGISTRATION_USER_UPDATED_DETAIL");
@@ -253,6 +254,7 @@ public class RegistrationController {
 			sourceGroup.add(group.getGroupName());
 		}
 		Collections.sort(sourceGroup);
+		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
 		return sourceGroup;
 	}
 
@@ -267,6 +269,17 @@ public class RegistrationController {
 		}
 		Collections.sort(sourceRole);
 		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
+	}
+
+	private void resetFields() {
+		initBasicGroups();
+		initBasicRoles();
+		userName = "";
+		password = "";
+		passwordConfirmation = "";
+		email = "";
+		firstName = "";
+		lastName = "";
 	}
 
 	// getter & setter
