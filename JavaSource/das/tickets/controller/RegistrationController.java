@@ -66,50 +66,26 @@ public class RegistrationController {
 
 	private User userToUpdate;
 
+	// ###################################################################
 	// constructors
+	// ###################################################################
 	public RegistrationController() {
-
-		// Roles
 		initBasicRoles();
-		// Groups
 		initBasicGroups();
-		// all users
 		allUsersByCreationDate = registrationDao
 				.findAllUsersByRegistrationDate();
 	}
 
+	// ###################################################################
 	// business methods
+	// ###################################################################
 	public String saveUserRegistration() {
 		if (!roleDefinitions.getTarget().isEmpty()
 				&& !groupDefinitions.getTarget().isEmpty()) {
-			Date createdOn = new Date();
-			User createdByUser = (User) SessionService
-					.getSessionAttribute("user");
-			String createdBy = createdByUser.getUserName();
-			// user
-			User newUser = new User();
-			newUser.setCreatedBy(createdBy);
-			newUser.setCreatedOn(createdOn);
-			newUser.setDisabled(false);
-			newUser.setEmail(email);
-			newUser.setPassword(PasswordService.createHashedPassword(password));
-			newUser.setUserName(userName);
-			newUser.setFirstName(firstName);
-			newUser.setLastName(lastName);
-			// roles
-			Set<Role> userRoles = new HashSet<Role>();
-			for (String newRole : roleDefinitions.getTarget()) {
-				Role role = registrationDao.findRoleByRoleName(newRole);
-				userRoles.add(role);
-			}
+			User newUser = defineBasicUserAttributes();
+			Set<Role> userRoles = defineRoles();
 			newUser.setRoles(userRoles);
-			// groups
-			Set<UserGroup> userGroups = new HashSet<UserGroup>();
-			for (String newGroup : groupDefinitions.getTarget()) {
-				UserGroup userGroup = registrationDao
-						.findGroupByGroupName(newGroup);
-				userGroups.add(userGroup);
-			}
+			Set<UserGroup> userGroups = defineGroups();
 			newUser.setGroups(userGroups);
 			registrationDao.persist(newUser);
 			resetFields();
@@ -129,38 +105,12 @@ public class RegistrationController {
 		firstName = userToUpdate.getFirstName();
 		lastName = userToUpdate.getLastName();
 		email = userToUpdate.getEmail();
-		// roles
-		targetRole = new ArrayList<String>();
-		sourceRole = new ArrayList<String>();
-		for (Role role : registrationDao.findRolesByUser(userToUpdate)) {
-			targetRole.add(role.getRoleName());
-		}
-		for (Role role : registrationDao
-				.findNotAssignedRolesByUser(userToUpdate)) {
-			if (!role.getRoleName().toLowerCase().equals("administrator")) {
-				sourceRole.add(role.getRoleName());
-			}
-		}
-		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
-		// groups
-		targetGroup = new ArrayList<String>();
-		sourceGroup = new ArrayList<String>();
-		for (UserGroup userGroup : registrationDao
-				.findGroupsByUser(userToUpdate)) {
-			targetGroup.add(userGroup.getGroupName());
-		}
-		for (UserGroup group : registrationDao
-				.findNotAssignedUserGroupsByUser(userToUpdate)) {
-			sourceGroup.add(group.getGroupName());
-		}
-		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
+		prepareUpdatedRolePickup();
+		prepareUpdatedGroupPickup();
 		userListToUpdate.add(userToUpdate);
 		allUsersByCreationDate = registrationDao
 				.findAllUsersByRegistrationDate();
-		Collections.sort(targetRole);
-		Collections.sort(sourceRole);
-		Collections.sort(targetGroup);
-		Collections.sort(sourceGroup);
+		sortPickup();
 		return UPDATE_PATH;
 	}
 
@@ -169,36 +119,12 @@ public class RegistrationController {
 		userToUpdate.setModifiedOn(new Date());
 		User modifiedByUser = (User) SessionService.getSessionAttribute("user");
 		userToUpdate.setModifiedBy(modifiedByUser.getUserName());
-		// roles
-		Set<Role> userRoles = new HashSet<Role>(userToUpdate.getRoles());
-		for (String newRole : roleDefinitions.getSource()) {
-			Role role = registrationDao.findRoleByRoleName(newRole);
-			userRoles.remove(role);
-		}
-		for (String newRole : roleDefinitions.getTarget()) {
-			Role role = registrationDao.findRoleByRoleName(newRole);
-			userRoles.add(role);
-		}
+		Set<Role> userRoles = redefineRoles();
 		userToUpdate.setRoles(userRoles);
-		// groups
-		Set<UserGroup> userGroups = new HashSet<UserGroup>(
-				userToUpdate.getGroups());
-		for (String newGroup : groupDefinitions.getSource()) {
-			UserGroup userGroup = registrationDao
-					.findGroupByGroupName(newGroup);
-			userGroups.remove(userGroup);
-		}
-		for (String newGroup : groupDefinitions.getTarget()) {
-			UserGroup userGroup = registrationDao
-					.findGroupByGroupName(newGroup);
-			userGroups.add(userGroup);
-		}
+		Set<UserGroup> userGroups = redefineGroups();
 		userToUpdate.setGroups(userGroups);
 		registrationDao.mergeUser(userToUpdate);
-		Collections.sort(targetRole);
-		Collections.sort(sourceRole);
-		Collections.sort(targetGroup);
-		Collections.sort(sourceGroup);
+		sortPickup();
 		resetFields();
 		MessageService.displayFacesMessageInfo("registration_properties",
 				"REGISTRATION_USER_UPDATED_SUMMARY",
@@ -227,7 +153,6 @@ public class RegistrationController {
 	}
 
 	public String removeUser(Long id) {
-		// remove user
 		userToRemove = registrationDao.getEntityManager().find(User.class, id);
 		registrationDao.remove(userToRemove);
 		MessageService.displayFacesMessageInfo("registration_properties",
@@ -245,7 +170,9 @@ public class RegistrationController {
 		return UPDATE_PATH;
 	}
 
-	// private functions
+	// ###################################################################
+	// private methods
+	// ###################################################################
 	private List<String> initBasicGroups() {
 		List<String> sourceGroup = new ArrayList<String>();
 		targetGroup = new ArrayList<String>();
@@ -282,7 +209,109 @@ public class RegistrationController {
 		lastName = "";
 	}
 
+	private void prepareUpdatedGroupPickup() {
+		targetGroup = new ArrayList<String>();
+		sourceGroup = new ArrayList<String>();
+		for (UserGroup userGroup : registrationDao
+				.findGroupsByUser(userToUpdate)) {
+			targetGroup.add(userGroup.getGroupName());
+		}
+		for (UserGroup group : registrationDao
+				.findNotAssignedUserGroupsByUser(userToUpdate)) {
+			sourceGroup.add(group.getGroupName());
+		}
+		groupDefinitions = new DualListModel<String>(sourceGroup, targetGroup);
+	}
+
+	private void prepareUpdatedRolePickup() {
+		targetRole = new ArrayList<String>();
+		sourceRole = new ArrayList<String>();
+		for (Role role : registrationDao.findRolesByUser(userToUpdate)) {
+			targetRole.add(role.getRoleName());
+		}
+		for (Role role : registrationDao
+				.findNotAssignedRolesByUser(userToUpdate)) {
+			if (!role.getRoleName().toLowerCase().equals("administrator")) {
+				sourceRole.add(role.getRoleName());
+			}
+		}
+		roleDefinitions = new DualListModel<String>(sourceRole, targetRole);
+	}
+
+	private void sortPickup() {
+		Collections.sort(targetRole);
+		Collections.sort(sourceRole);
+		Collections.sort(targetGroup);
+		Collections.sort(sourceGroup);
+	}
+
+	private Set<UserGroup> redefineGroups() {
+		Set<UserGroup> userGroups = new HashSet<UserGroup>(
+				userToUpdate.getGroups());
+		for (String newGroup : groupDefinitions.getSource()) {
+			UserGroup userGroup = registrationDao
+					.findGroupByGroupName(newGroup);
+			userGroups.remove(userGroup);
+		}
+		for (String newGroup : groupDefinitions.getTarget()) {
+			UserGroup userGroup = registrationDao
+					.findGroupByGroupName(newGroup);
+			userGroups.add(userGroup);
+		}
+		return userGroups;
+	}
+
+	private Set<Role> redefineRoles() {
+		Set<Role> userRoles = new HashSet<Role>(userToUpdate.getRoles());
+		for (String newRole : roleDefinitions.getSource()) {
+			Role role = registrationDao.findRoleByRoleName(newRole);
+			userRoles.remove(role);
+		}
+		for (String newRole : roleDefinitions.getTarget()) {
+			Role role = registrationDao.findRoleByRoleName(newRole);
+			userRoles.add(role);
+		}
+		return userRoles;
+	}
+
+	private Set<UserGroup> defineGroups() {
+		Set<UserGroup> userGroups = new HashSet<UserGroup>();
+		for (String newGroup : groupDefinitions.getTarget()) {
+			UserGroup userGroup = registrationDao
+					.findGroupByGroupName(newGroup);
+			userGroups.add(userGroup);
+		}
+		return userGroups;
+	}
+
+	private Set<Role> defineRoles() {
+		Set<Role> userRoles = new HashSet<Role>();
+		for (String newRole : roleDefinitions.getTarget()) {
+			Role role = registrationDao.findRoleByRoleName(newRole);
+			userRoles.add(role);
+		}
+		return userRoles;
+	}
+
+	private User defineBasicUserAttributes() {
+		Date createdOn = new Date();
+		User createdByUser = (User) SessionService.getSessionAttribute("user");
+		String createdBy = createdByUser.getUserName();
+		User newUser = new User();
+		newUser.setCreatedBy(createdBy);
+		newUser.setCreatedOn(createdOn);
+		newUser.setDisabled(false);
+		newUser.setEmail(email);
+		newUser.setPassword(PasswordService.createHashedPassword(password));
+		newUser.setUserName(userName);
+		newUser.setFirstName(firstName);
+		newUser.setLastName(lastName);
+		return newUser;
+	}
+
+	// ###################################################################
 	// getter & setter
+	// ###################################################################
 	public String getUserName() {
 		return userName;
 	}
